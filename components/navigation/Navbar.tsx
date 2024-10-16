@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import {
   Box,
   Flex,
@@ -66,28 +66,20 @@ export default function Navbar() {
           direction={'row'}
           spacing={6}
         >
-          <Button
-            as={'a'}
-            fontSize={'sm'}
-            fontWeight={400}
-            variant={'link'}
-            href={'#'}
-          >
-            Sign In
+          <Button fontSize={'sm'} fontWeight={400} variant={'link'}>
+            <Link href='/login'>Login</Link>
           </Button>
           <Button
-            as={'a'}
             display={{ base: 'none', md: 'inline-flex' }}
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
             bg={'pink.400'}
-            href={'#'}
             _hover={{
               bg: 'pink.300',
             }}
           >
-            Sign Up
+            <Link href='/sign-up'>Sign up</Link>
           </Button>
         </Stack>
       </Flex>
