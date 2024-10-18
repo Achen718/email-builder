@@ -1,5 +1,4 @@
 'use client';
-
 import {
   Flex,
   Box,
@@ -13,8 +12,19 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useState } from 'react';
+import { useAuth } from '@/context/authContext';
 
-export default function Form() {
+export default function Login() {
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await login(email, password);
+  };
+
   return (
     <Flex
       minH={'100vh'}
@@ -35,11 +45,19 @@ export default function Form() {
           <Stack spacing={4}>
             <FormControl id='email'>
               <FormLabel>Email address</FormLabel>
-              <Input type='email' />
+              <Input
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
             <FormControl id='password'>
               <FormLabel>Password</FormLabel>
-              <Input type='password' />
+              <Input
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </FormControl>
             <Stack spacing={10}>
               <Stack
@@ -56,6 +74,7 @@ export default function Form() {
                 _hover={{
                   bg: 'blue.500',
                 }}
+                onClick={handleLogin}
               >
                 Login
               </Button>

@@ -1,3 +1,4 @@
+'use client';
 import Form from '@/components/forms/Login';
 
 const Login = () => {

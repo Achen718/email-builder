@@ -1,21 +1,62 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+'use client';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
-  const login = () => {
-    setIsAuthenticated(true);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    const url = '/api/login';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      setIsAuthenticated(true);
+      router.push('/dashboard');
+    } catch (error) {
+      alert((error as Error).message);
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const url = '/api/logout';
+    await fetch(url, {
+      method: 'POST',
+    });
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
   };
 
