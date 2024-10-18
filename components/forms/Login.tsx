@@ -19,10 +19,11 @@ export default function Login() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    await login(email, password, rememberMe);
   };
 
   return (
@@ -65,7 +66,12 @@ export default function Login() {
                 align={'start'}
                 justify={'space-between'}
               >
-                <Checkbox>Remember me</Checkbox>
+                <Checkbox
+                  isChecked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                >
+                  Remember me
+                </Checkbox>
                 <Text color={'blue.400'}>Forgot password?</Text>
               </Stack>
               <Button

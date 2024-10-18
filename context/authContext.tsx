@@ -10,7 +10,11 @@ import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (
+    email: string,
+    password: string,
+    rememberMe: boolean
+  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -27,7 +31,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  // move login and logout function
+  const login = async (
+    email: string,
+    password: string,
+    rememberMe: boolean
+  ) => {
     const url = '/api/login';
     try {
       const response = await fetch(url, {
@@ -43,7 +52,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
+      if (rememberMe) {
+        localStorage.setItem('token', data.token);
+      }
       setIsAuthenticated(true);
       router.push('/dashboard');
     } catch (error) {
