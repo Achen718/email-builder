@@ -81,6 +81,7 @@ export default function Login() {
                   bg: 'blue.500',
                 }}
                 onClick={handleLogin}
+                name='login'
               >
                 Login
               </Button>

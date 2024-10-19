@@ -52,13 +52,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const data = await response.json();
+      console.log(data);
       if (rememberMe) {
         localStorage.setItem('token', data.token);
       }
       setIsAuthenticated(true);
       router.push('/dashboard');
     } catch (error) {
-      alert((error as Error).message);
+      console.log((error as Error).message);
     }
   };
 
