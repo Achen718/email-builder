@@ -1,10 +1,11 @@
 'use client';
-import Form from '@/components/forms/Login';
+import { FC } from 'react';
+import LoginForm from '@/components/forms/Login';
 
-const Login = () => {
+const Login: FC = () => {
   return (
     <section>
-      <Form />
+      <LoginForm />
     </section>
   );
 };

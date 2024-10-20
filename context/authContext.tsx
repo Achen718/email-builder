@@ -52,7 +52,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const data = await response.json();
-      console.log(data);
       if (rememberMe) {
         localStorage.setItem('token', data.token);
       }

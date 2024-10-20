@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/Loading';
+import Sidebar from '@/components/dashboard/Sidebar';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -22,7 +23,7 @@ const Dashboard = () => {
     return <Loading />;
   }
 
-  return <div>{token ? 'Dashboard' : <Loading />}</div>;
+  return <section>{token ? <Sidebar /> : <Loading />}</section>;
 };
 
 export default Dashboard;
