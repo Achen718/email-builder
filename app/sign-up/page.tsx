@@ -1,5 +1,11 @@
+import SignupCard from '@/components/forms/sign-up/SignUp';
+
 const SignUp = () => {
-  return <div>signup</div>;
+  return (
+    <div>
+      <SignupCard />
+    </div>
+  );
 };
 
 export default SignUp;
