@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
 import { Providers } from './providers';
-import { UserProvider } from '@/context/userContext';
+import { AuthProvider } from '@/context/authContext';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,12 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <UserProvider>
+    <AuthProvider>
       <html lang='en'>
         <body>
           <Providers>{children}</Providers>
         </body>
       </html>
-    </UserProvider>
+    </AuthProvider>
   );
 }
