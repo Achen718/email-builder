@@ -42,11 +42,27 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('sign up from submitted', formFields);
-
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       return;
+    }
+
+    try {
+      const response = await fetch('/api/mockAuth/sign-up', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstName, email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error creating user');
+      }
+
+      const data = await response.json();
+    } catch (error) {
+      console.error('User creation error:', error);
     }
   };
 
