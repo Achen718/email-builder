@@ -12,7 +12,7 @@ import {
   createIcon,
 } from '@chakra-ui/react';
 
-export default function Hero() {
+const Hero = () => {
   return (
     <>
       <Container maxW={'3xl'}>
@@ -63,7 +63,7 @@ export default function Hero() {
       </Container>
     </>
   );
-}
+};
 
 const Arrow = createIcon({
   displayName: 'Arrow',
@@ -77,3 +77,5 @@ const Arrow = createIcon({
     />
   ),
 });
+
+export default Hero;

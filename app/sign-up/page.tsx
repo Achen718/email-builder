@@ -1,5 +1,11 @@
+import SignUpForm from '@/components/forms/sign-up/SignUpForm';
+
 const SignUp = () => {
-  return <div>signup</div>;
+  return (
+    <div>
+      <SignUpForm />
+    </div>
+  );
 };
 
 export default SignUp;

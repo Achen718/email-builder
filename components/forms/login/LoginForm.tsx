@@ -15,7 +15,7 @@ import {
 import { useState } from 'react';
 import { useAuth } from '@/context/authContext';
 
-export default function LoginForm() {
+const LoginForm = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -91,4 +91,6 @@ export default function LoginForm() {
       </Stack>
     </Flex>
   );
-}
+};
+
+export default LoginForm;

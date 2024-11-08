@@ -16,7 +16,7 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import MobileNav from './mobile/MobileNav';
 import DesktopNav from './desktop/DesktopNav';
 
-export default function Navbar() {
+const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -89,4 +89,6 @@ export default function Navbar() {
       </Collapse>
     </Box>
   );
-}
+};
+
+export default Navbar;

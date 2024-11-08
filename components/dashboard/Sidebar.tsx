@@ -37,7 +37,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Settings', icon: FiSettings },
 ];
 
-export default function Sidebar() {
+const Sidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH='100vh' bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -64,7 +64,7 @@ export default function Sidebar() {
       </Box>
     </Box>
   );
-}
+};
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -166,3 +166,5 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     </Flex>
   );
 };
+
+export default Sidebar;

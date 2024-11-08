@@ -1,6 +1,6 @@
 'use client';
 import { FC } from 'react';
-import LoginForm from '@/components/forms/Login';
+import LoginForm from '@/components/forms/login/LoginForm';
 
 const Login: FC = () => {
   return (
