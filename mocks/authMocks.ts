@@ -6,6 +6,26 @@ interface LoginError {
   message: string;
 }
 
+interface SignUpResponse {
+  message: string;
+}
+
+export const mockSignUp = (
+  firstName: string,
+  email: string,
+  password: string
+): Promise<SignUpResponse> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (email && password && firstName) {
+        resolve({ message: 'User registered successfully' });
+      } else {
+        reject(new Error('Invalid input'));
+      }
+    }, 500);
+  });
+};
+
 export const mockLogin = (
   email: string,
   password: string

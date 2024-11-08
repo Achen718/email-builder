@@ -1,9 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { renderProviders } from '@/utils/test.utils';
 import { ChakraProvider } from '@chakra-ui/react';
 import { AuthProvider } from '@/context/authContext';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Login from '@/components/forms/login/LoginForm';
 import { useRouter } from 'next/navigation';
 import { mockLogin } from '../../mocks/authMocks';

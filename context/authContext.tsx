@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: string,
     rememberMe: boolean
   ) => {
-    const url = '/api/login';
+    const url = '/api/mockAuth/login';
     try {
       const response = await fetch(url, {
         method: 'POST',
