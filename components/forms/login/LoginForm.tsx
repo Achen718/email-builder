@@ -2,9 +2,6 @@
 import {
   Flex,
   Box,
-  FormControl,
-  FormLabel,
-  Input,
   Checkbox,
   Stack,
   Button,
@@ -13,17 +10,34 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useAuth } from '@/context/authContext';
+import { login } from '@/lib/services/authService';
+import FormInput from '@/components/forms/formInput/FormInput';
+
+const defaultFormFields = {
+  email: '',
+  password: '',
+};
 
 const LoginForm = () => {
-  const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formFields, setFormFields] = useState(defaultFormFields);
   const [rememberMe, setRememberMe] = useState(false);
+  const { email, password } = formFields;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password, rememberMe);
+
+    try {
+      const data = await login(email, password);
+      // Handle successful login (e.g., store token, redirect, etc.)
+    } catch (error) {
+      console.log((error as Error).message);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormFields({ ...formFields, [name]: value });
   };
 
   return (
@@ -44,22 +58,20 @@ const LoginForm = () => {
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id='email'>
-              <FormLabel>Email address</FormLabel>
-              <Input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </FormControl>
-            <FormControl id='password'>
-              <FormLabel>Password</FormLabel>
-              <Input
-                type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </FormControl>
+            <FormInput
+              id='email'
+              label='Email address'
+              type='email'
+              value={email}
+              onChange={handleChange}
+            />
+            <FormInput
+              id='password'
+              label='Password'
+              type='password'
+              value={password}
+              onChange={handleChange}
+            />
             <Stack spacing={10}>
               <Stack
                 direction={{ base: 'column', sm: 'row' }}

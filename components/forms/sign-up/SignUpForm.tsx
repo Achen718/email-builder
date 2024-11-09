@@ -16,9 +16,11 @@ import {
   useColorModeValue,
   Link,
 } from '@chakra-ui/react';
-import NextLink from 'next/link';
 import { useState } from 'react';
+import NextLink from 'next/link';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import FormInput from '@/components/forms/formInput/FormInput';
+import { signUp } from '@/lib/services/authService';
 
 const defaultFormFields = {
   firstName: '',
@@ -33,7 +35,6 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
     const { name, value } = e.target;
 
     setFormFields({ ...formFields, [name]: value });
@@ -48,19 +49,8 @@ const SignUpForm = () => {
     }
 
     try {
-      const response = await fetch('/api/mockAuth/sign-up', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ firstName, email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error creating user');
-      }
-
-      const data = await response.json();
+      const data = await signUp(firstName, email, password);
+      // Handle successful signup (e.g., store token, redirect, etc.)
     } catch (error) {
       console.error('User creation error:', error);
     }
@@ -89,32 +79,34 @@ const SignUpForm = () => {
             <form onSubmit={handleSubmit}>
               <HStack>
                 <Box>
-                  <FormControl id='firstName' isRequired>
-                    <FormLabel>First Name</FormLabel>
-                    <Input
-                      type='text'
-                      name='firstName'
-                      value={firstName}
-                      onChange={handleChange}
-                    />
-                  </FormControl>
+                  <FormInput
+                    id='firstName'
+                    label='First Name'
+                    type='text'
+                    name='firstName'
+                    value={firstName}
+                    onChange={handleChange}
+                    isRequired
+                  />
                 </Box>
                 <Box>
-                  <FormControl id='lastName'>
-                    <FormLabel>Last Name</FormLabel>
-                    <Input type='text' />
-                  </FormControl>
+                  <FormInput
+                    id='lastName'
+                    label='Last Name'
+                    type='text'
+                    onChange={handleChange}
+                  />
                 </Box>
               </HStack>
-              <FormControl id='email' isRequired>
-                <FormLabel>Email address</FormLabel>
-                <Input
-                  type='email'
-                  name='email'
-                  value={email}
-                  onChange={handleChange}
-                />
-              </FormControl>
+              <FormInput
+                id='email'
+                label='Email address'
+                type='email'
+                name='email'
+                value={email}
+                onChange={handleChange}
+                isRequired
+              />
               <FormControl id='password' isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
