@@ -61,6 +61,7 @@ const LoginForm = () => {
             <FormInput
               id='email'
               label='Email address'
+              name='email'
               type='email'
               value={email}
               onChange={handleChange}
@@ -68,6 +69,7 @@ const LoginForm = () => {
             <FormInput
               id='password'
               label='Password'
+              name='password'
               type='password'
               value={password}
               onChange={handleChange}

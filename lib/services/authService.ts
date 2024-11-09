@@ -11,7 +11,7 @@ export const login = async (email: string, password: string) => {
     throw new Error('Login failed');
   }
 
-  return response.json();
+  return await response.json();
 };
 
 export const signUp = async (
@@ -31,5 +31,5 @@ export const signUp = async (
     throw new Error('Error creating user');
   }
 
-  return response.json();
+  return await response.json();
 };
