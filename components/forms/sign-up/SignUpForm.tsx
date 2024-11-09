@@ -107,48 +107,24 @@ const SignUpForm = () => {
                 onChange={handleChange}
                 isRequired
               />
-              <FormControl id='password' isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    name='password'
-                    value={password}
-                    onChange={handleChange}
-                  />
-                  <InputRightElement h={'full'}>
-                    <Button
-                      variant={'ghost'}
-                      onClick={() =>
-                        setShowPassword((showPassword) => !showPassword)
-                      }
-                    >
-                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
-              <FormControl id='confirmPassword' isRequired>
-                <FormLabel>Confirm Password</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    name='confirmPassword'
-                    value={confirmPassword}
-                    onChange={handleChange}
-                  />
-                  <InputRightElement h={'full'}>
-                    <Button
-                      variant={'ghost'}
-                      onClick={() =>
-                        setShowPassword((showPassword) => !showPassword)
-                      }
-                    >
-                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
+              <FormInput
+                id='password'
+                label='Password'
+                type={showPassword ? 'text' : 'password'}
+                name='password'
+                value={password}
+                onChange={handleChange}
+                isRequired
+              />
+              <FormInput
+                id='confirmPassword'
+                label='Confirm Password'
+                type={showPassword ? 'text' : 'password'}
+                name='confirmPassword'
+                value={confirmPassword}
+                onChange={handleChange}
+                isRequired
+              />
               <Stack spacing={10} pt={2}>
                 <Button
                   loadingText='Submitting'
