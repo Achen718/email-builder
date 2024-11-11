@@ -1,17 +1,22 @@
 export const login = async (email: string, password: string) => {
-  const response = await fetch('/api/mockAuth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  });
+  try {
+    const response = await fetch('/api/mockAuth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-  if (!response.ok) {
-    throw new Error('Login failed');
+    if (!response.ok) {
+      throw new Error('Login failed');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Login error:', error);
   }
-
-  return await response.json();
 };
 
 export const signUp = async (
@@ -19,17 +24,21 @@ export const signUp = async (
   email: string,
   password: string
 ) => {
-  const response = await fetch('/api/mockAuth/sign-up', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ firstName, email, password }),
-  });
+  try {
+    const response = await fetch('/api/mockAuth/sign-up', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ firstName, email, password }),
+    });
 
-  if (!response.ok) {
-    throw new Error('Error creating user');
+    if (!response.ok) {
+      throw new Error('Error creating user');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Sign up error:', error);
   }
-
-  return await response.json();
 };

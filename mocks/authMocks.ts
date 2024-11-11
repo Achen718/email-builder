@@ -10,6 +10,22 @@ interface SignUpResponse {
   message: string;
 }
 
+interface User {
+  firstName: string;
+  email: string;
+  password: string;
+}
+
+const mockDatabase: User[] = [];
+
+const findUserByEmail = (email: string): User | undefined => {
+  return mockDatabase.find((user) => user.email === email);
+};
+
+const createUser = (user: User): void => {
+  mockDatabase.push(user);
+};
+
 export const mockSignUp = (
   firstName: string,
   email: string,
@@ -17,10 +33,12 @@ export const mockSignUp = (
 ): Promise<SignUpResponse> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (email && password && firstName) {
-        resolve({ message: 'User registered successfully' });
+      const existingUser = findUserByEmail(email);
+      if (existingUser) {
+        reject(new Error('User already exists'));
       } else {
-        reject(new Error('Invalid input'));
+        createUser({ firstName, email, password });
+        resolve({ message: 'User registered successfully' });
       }
     }, 500);
   });

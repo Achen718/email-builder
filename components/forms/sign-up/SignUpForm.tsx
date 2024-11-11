@@ -3,12 +3,7 @@
 import {
   Flex,
   Box,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
   HStack,
-  InputRightElement,
   Stack,
   Button,
   Heading,
@@ -18,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import NextLink from 'next/link';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useRouter } from 'next/navigation';
 import FormInput from '@/components/forms/formInput/FormInput';
 import { signUp } from '@/lib/services/authService';
 
@@ -32,7 +27,7 @@ const defaultFormFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { firstName, email, password, confirmPassword } = formFields;
-  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -49,8 +44,11 @@ const SignUpForm = () => {
     }
 
     try {
+      // replace with actual service call
       const data = await signUp(firstName, email, password);
-      // Handle successful signup (e.g., store token, redirect, etc.)
+      if (data.message === 'User registered successfully') {
+        router.push('/login');
+      }
     } catch (error) {
       console.error('User creation error:', error);
     }
@@ -110,7 +108,7 @@ const SignUpForm = () => {
               <FormInput
                 id='password'
                 label='Password'
-                type={showPassword ? 'text' : 'password'}
+                type='password'
                 name='password'
                 value={password}
                 onChange={handleChange}
@@ -119,7 +117,7 @@ const SignUpForm = () => {
               <FormInput
                 id='confirmPassword'
                 label='Confirm Password'
-                type={showPassword ? 'text' : 'password'}
+                type='password'
                 name='confirmPassword'
                 value={confirmPassword}
                 onChange={handleChange}
