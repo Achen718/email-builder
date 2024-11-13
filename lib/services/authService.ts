@@ -1,4 +1,5 @@
-export const login = async (email: string, password: string) => {
+// replace with actual service call
+export const userLogin = async (email: string, password: string) => {
   try {
     const response = await fetch('/api/mockAuth/login', {
       method: 'POST',
@@ -13,6 +14,7 @@ export const login = async (email: string, password: string) => {
     }
 
     const data = await response.json();
+    localStorage.setItem('token', data.token);
     return data;
   } catch (error) {
     console.error('Login error:', error);

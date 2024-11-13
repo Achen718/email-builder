@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { ChakraProvider } from '@chakra-ui/react';
-import { AuthProvider } from '@/context/authContext';
+import StoreProvider from '@/app/providers/StoreProvider';
 import { render, screen } from '@testing-library/react';
 import Login from '@/components/forms/login/LoginForm';
 import { useRouter } from 'next/navigation';
@@ -30,11 +30,11 @@ describe('Login Component', () => {
 
   it('renders the login form', () => {
     render(
-      <AuthProvider>
+      <StoreProvider>
         <ChakraProvider>
           <Login />
         </ChakraProvider>
-      </AuthProvider>
+      </StoreProvider>
     );
 
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();

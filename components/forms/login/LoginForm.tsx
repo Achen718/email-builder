@@ -10,7 +10,10 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { login } from '@/lib/services/authService';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/lib/hooks/hooks';
+import { setAuthToken } from '@/lib/features/auth/authSlice';
+import { userLogin } from '@/lib/services/authService';
 import FormInput from '@/components/forms/formInput/FormInput';
 
 const defaultFormFields = {
@@ -23,15 +26,17 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const { email, password } = formFields;
 
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const data = await login(email, password);
-      // Handle successful login (e.g., store token, redirect, etc.)
-    } catch (error) {
-      console.log((error as Error).message);
-    }
+    const response = await userLogin(email, password);
+
+    dispatch(setAuthToken({ userToken: response.token }));
+    router.push('/dashboard');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
