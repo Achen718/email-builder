@@ -15,7 +15,7 @@ import { useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import FormInput from '@/components/forms/formInput/FormInput';
-import { signUp } from '@/lib/services/authService';
+import { signUp } from '@/services/auth/authService';
 
 const defaultFormFields = {
   firstName: '',

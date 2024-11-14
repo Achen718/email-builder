@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import { setAuthToken } from '@/lib/features/auth/authSlice';
-import { userLogin } from '@/lib/services/authService';
+import { userLogin } from '@/services/auth/authService';
 import FormInput from '@/components/forms/formInput/FormInput';
 
 const defaultFormFields = {

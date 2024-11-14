@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
+    // replace with store
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
@@ -23,7 +24,11 @@ const Dashboard = () => {
     return <Loading />;
   }
 
-  return <section>{token ? <Sidebar /> : <Loading />}</section>;
+  return (
+    <section>
+      <Sidebar />
+    </section>
+  );
 };
 
 export default Dashboard;
