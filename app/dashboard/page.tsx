@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/Loading';
-import Sidebar from '@/components/dashboard/Sidebar';
+import Sidebar from '@/components/dashboard/side-bar/Sidebar';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // replace with store
+    // replace with store dispatch
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
@@ -20,13 +20,10 @@ const Dashboard = () => {
     }
   }, [router]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
-    <section>
-      <Sidebar />
+    <section className='dashboard-container'>
+      {/* wrap protected routes */}
+      {isLoading ? <Loading /> : <Sidebar />}
     </section>
   );
 };
