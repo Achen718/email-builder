@@ -27,7 +27,6 @@ const LoginForm = () => {
   const { email, password } = formFields;
 
   const router = useRouter();
-
   const dispatch = useAppDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -63,48 +62,50 @@ const LoginForm = () => {
           p={8}
         >
           <Stack spacing={4}>
-            <FormInput
-              id='email'
-              label='Email address'
-              name='email'
-              type='email'
-              value={email}
-              onChange={handleChange}
-            />
-            <FormInput
-              id='password'
-              label='Password'
-              name='password'
-              type='password'
-              value={password}
-              onChange={handleChange}
-            />
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: 'column', sm: 'row' }}
-                align={'start'}
-                justify={'space-between'}
-              >
-                <Checkbox
-                  isChecked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+            <form onSubmit={handleLogin}>
+              <FormInput
+                id='email'
+                label='Email address'
+                name='email'
+                type='email'
+                value={email}
+                onChange={handleChange}
+              />
+              <FormInput
+                id='password'
+                label='Password'
+                name='password'
+                type='password'
+                value={password}
+                onChange={handleChange}
+              />
+              <Stack spacing={10}>
+                <Stack
+                  direction={{ base: 'column', sm: 'row' }}
+                  align={'start'}
+                  justify={'space-between'}
                 >
-                  Remember me
-                </Checkbox>
-                <Text color={'blue.400'}>Forgot password?</Text>
+                  <Checkbox
+                    isChecked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  >
+                    Remember me
+                  </Checkbox>
+                  <Text color={'blue.400'}>Forgot password?</Text>
+                </Stack>
+                <Button
+                  bg={'blue.400'}
+                  color={'white'}
+                  _hover={{
+                    bg: 'blue.500',
+                  }}
+                  type='submit'
+                  name='login'
+                >
+                  Login
+                </Button>
               </Stack>
-              <Button
-                bg={'blue.400'}
-                color={'white'}
-                _hover={{
-                  bg: 'blue.500',
-                }}
-                onClick={handleLogin}
-                name='login'
-              >
-                Login
-              </Button>
-            </Stack>
+            </form>
           </Stack>
         </Box>
       </Stack>
