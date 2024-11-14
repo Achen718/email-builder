@@ -1,7 +1,7 @@
 'use client';
 import SignUpForm from '@/components/forms/sign-up/SignUpForm';
 
-const SignUp = () => {
+const SignUpPage = () => {
   return (
     <section>
       <SignUpForm />
@@ -9,4 +9,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUpPage;

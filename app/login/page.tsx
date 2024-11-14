@@ -2,7 +2,7 @@
 import { FC } from 'react';
 import LoginForm from '@/components/forms/login/LoginForm';
 
-const Login: FC = () => {
+const LoginPage: FC = () => {
   return (
     <section>
       <LoginForm />
@@ -10,4 +10,4 @@ const Login: FC = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

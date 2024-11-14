@@ -2,12 +2,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/Loading';
-import Sidebar from '@/components/dashboard/side-bar/Sidebar';
+import Dashboard from '@/components/dashboard/Dashboard';
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     // replace with store dispatch
@@ -15,7 +14,6 @@ const Dashboard = () => {
     if (!token) {
       router.push('/login');
     } else {
-      setToken(token);
       setIsLoading(false);
     }
   }, [router]);
@@ -23,9 +21,9 @@ const Dashboard = () => {
   return (
     <section className='dashboard-container'>
       {/* wrap protected routes */}
-      {isLoading ? <Loading /> : <Sidebar />}
+      {isLoading ? <Loading /> : <Dashboard />}
     </section>
   );
 };
 
-export default Dashboard;
+export default DashboardPage;
