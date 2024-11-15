@@ -29,19 +29,19 @@ const LoginForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormFields({ ...formFields, [name]: value });
+  };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const response = await userLogin(email, password);
 
     dispatch(setAuthToken(response.token));
     router.push('/dashboard');
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setFormFields({ ...formFields, [name]: value });
   };
 
   return (

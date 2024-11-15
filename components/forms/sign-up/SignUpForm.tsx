@@ -42,15 +42,9 @@ const SignUpForm = () => {
       alert('Passwords do not match');
       return;
     }
-
-    try {
-      // replace with actual service call
-      const data = await signUp(firstName, email, password);
-      if (data.message === 'User registered successfully') {
-        router.push('/login');
-      }
-    } catch (error) {
-      console.error('User creation error:', error);
+    const response = await signUp(firstName, email, password);
+    if (response) {
+      router.push('/login');
     }
   };
 
