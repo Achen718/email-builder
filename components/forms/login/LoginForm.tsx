@@ -1,3 +1,4 @@
+'use client';
 import {
   Flex,
   Box,
@@ -33,7 +34,7 @@ const LoginForm = () => {
 
     const response = await userLogin(email, password);
 
-    dispatch(setAuthToken({ userToken: response.token }));
+    dispatch(setAuthToken(response.token));
     router.push('/dashboard');
   };
 

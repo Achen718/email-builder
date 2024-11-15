@@ -15,10 +15,12 @@ import {
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import SidebarNavItem from '../nav/SidebarNavItem';
+
 interface LinkItemProps {
   name: string;
   icon: IconType;
 }
+
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome },
   { name: 'Trending', icon: FiTrendingUp },

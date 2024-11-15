@@ -1,3 +1,4 @@
+'use client';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import Sidebar from './side-bar/Sidebar';
 

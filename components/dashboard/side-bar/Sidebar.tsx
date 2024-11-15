@@ -1,3 +1,4 @@
+'use client';
 import { Drawer, DrawerContent, useDisclosure } from '@chakra-ui/react';
 import SidebarContent from './contents/SidebarContent';
 import MobileNav from './nav/MobileNav';

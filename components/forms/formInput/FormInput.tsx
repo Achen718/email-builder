@@ -1,5 +1,3 @@
-'use client';
-
 import { FormControl, FormLabel, Input, InputProps } from '@chakra-ui/react';
 
 interface FormInputProps extends InputProps {
