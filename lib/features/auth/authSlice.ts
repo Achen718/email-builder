@@ -1,25 +1,45 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { userLogin } from './authActions';
 interface IAuthState {
   userToken: string | null;
-  userInfo: string | null;
+  currentUser: string | null;
+  success: boolean;
+  error: string | null;
+  loading: boolean;
 }
 
-const initialState: IAuthState = {
+const initialState = {
   userToken: null,
-  userInfo: null,
-};
+  currentUser: null,
+  success: false,
+  error: null,
+  loading: false,
+} satisfies IAuthState;
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthToken(state, action: PayloadAction<string>) {
+    setAuthToken(state, action: PayloadAction<string | null>) {
       state.userToken = action.payload;
     },
-    clearAuthToken(state) {
-      state.userToken = null;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(userLogin.pending, (state: IAuthState) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userLogin.fulfilled, (state: IAuthState, { payload }) => {
+        console.log(payload);
+        state.loading = false;
+        state.currentUser = payload;
+        state.userToken = payload.token;
+      })
+      .addCase(userLogin.rejected, (state: IAuthState, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 

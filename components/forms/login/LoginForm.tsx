@@ -9,11 +9,11 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch } from '@/lib/hooks/hooks';
-import { setAuthToken } from '@/lib/features/auth/authSlice';
-import { userLogin } from '@/services/auth/authService';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
+import { userLogin } from '@/lib/features/auth/authActions';
+
 import FormInput from '@/components/forms/formInput/FormInput';
 
 const defaultFormFields = {
@@ -23,11 +23,11 @@ const defaultFormFields = {
 
 const LoginForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const [rememberMe, setRememberMe] = useState(false);
   const { email, password } = formFields;
 
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { loading, currentUser, error } = useAppSelector((state) => state.auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,14 +35,16 @@ const LoginForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const response = await userLogin(email, password);
-
-    dispatch(setAuthToken(response.token));
-    router.push('/dashboard');
+    dispatch(userLogin({ email, password }));
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push('/dashboard');
+    }
+  }, [router, currentUser]);
 
   return (
     <Flex
@@ -62,7 +64,7 @@ const LoginForm = () => {
           p={8}
         >
           <Stack spacing={4}>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSubmit}>
               <FormInput
                 id='email'
                 label='Email address'
@@ -70,6 +72,7 @@ const LoginForm = () => {
                 type='email'
                 value={email}
                 onChange={handleChange}
+                isRequired
               />
               <FormInput
                 id='password'
@@ -78,6 +81,7 @@ const LoginForm = () => {
                 type='password'
                 value={password}
                 onChange={handleChange}
+                isRequired
               />
               <Stack spacing={10}>
                 <Stack
@@ -85,15 +89,11 @@ const LoginForm = () => {
                   align={'start'}
                   justify={'space-between'}
                 >
-                  <Checkbox
-                    isChecked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  >
-                    Remember me
-                  </Checkbox>
                   <Text color={'blue.400'}>Forgot password?</Text>
                 </Stack>
                 <Button
+                  isLoading={loading}
+                  loadingText='Submitting'
                   bg={'blue.400'}
                   color={'white'}
                   _hover={{

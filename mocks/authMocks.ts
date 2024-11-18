@@ -1,4 +1,5 @@
 interface LoginResponse {
+  user: { email: string };
   token: string;
 }
 
@@ -51,7 +52,7 @@ export const mockLogin = (
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (email === 'email@example.com' && password === 'password') {
-        resolve({ token: 'fake-jwt-token' });
+        resolve({ token: 'fake-jwt-token', user: { email } });
       } else {
         reject(new Error('Invalid credentials'));
       }
