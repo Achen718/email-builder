@@ -2,7 +2,6 @@
 import {
   Flex,
   Box,
-  Checkbox,
   Stack,
   Button,
   Heading,

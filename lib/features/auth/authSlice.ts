@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { userLogin } from './authActions';
+import { userLogin, userSignUp } from './authActions';
+
 interface IAuthState {
   userToken: string | null;
   currentUser: string | null;
@@ -8,13 +9,13 @@ interface IAuthState {
   loading: boolean;
 }
 
-const initialState = {
+const initialState: IAuthState = {
   userToken: null,
   currentUser: null,
   success: false,
   error: null,
   loading: false,
-} satisfies IAuthState;
+};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -31,14 +32,25 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(userLogin.fulfilled, (state: IAuthState, { payload }) => {
-        console.log(payload);
         state.loading = false;
         state.currentUser = payload;
         state.userToken = payload.token;
       })
       .addCase(userLogin.rejected, (state: IAuthState, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error.message ?? null;
+      })
+      .addCase(userSignUp.pending, (state: IAuthState) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userSignUp.fulfilled, (state: IAuthState) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(userSignUp.rejected, (state: IAuthState, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? null;
       });
   },
 });

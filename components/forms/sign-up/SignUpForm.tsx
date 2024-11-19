@@ -11,11 +11,12 @@ import {
   useColorModeValue,
   Link,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import FormInput from '@/components/forms/formInput/FormInput';
-import { signUp } from '@/services/auth/authService';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
+import { userSignUp } from '@/lib/features/auth/authActions';
 
 const defaultFormFields = {
   firstName: '',
@@ -27,7 +28,10 @@ const defaultFormFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { firstName, email, password, confirmPassword } = formFields;
+
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loading, error, success } = useAppSelector((state) => state.auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,11 +46,13 @@ const SignUpForm = () => {
       alert('Passwords do not match');
       return;
     }
-    const response = await signUp(firstName, email, password);
-    if (response) {
-      router.push('/login');
-    }
+
+    dispatch(userSignUp({ firstName, email, password }));
   };
+
+  useEffect(() => {
+    if (success) router.push('/login');
+  }, [router, success]);
 
   return (
     <Flex
@@ -119,6 +125,7 @@ const SignUpForm = () => {
               />
               <Stack spacing={10} pt={2}>
                 <Button
+                  isLoading={loading}
                   loadingText='Submitting'
                   type='submit'
                   size='lg'
