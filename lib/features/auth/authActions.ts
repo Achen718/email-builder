@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setAuthToken } from './authSlice';
 
 export const userSignUp = createAsyncThunk(
   'auth/signUp',
