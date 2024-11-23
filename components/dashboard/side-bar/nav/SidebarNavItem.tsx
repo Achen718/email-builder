@@ -1,15 +1,18 @@
 import { Box, Flex, Icon, FlexProps } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
+import NextLink from 'next/link';
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: string;
+  href: string;
 }
-const SidebarNavItem = ({ icon, children, ...rest }: NavItemProps) => {
+
+const SidebarNavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
   return (
     <Box
-      as='a'
-      href='#'
+      as={NextLink}
+      href={href}
       style={{ textDecoration: 'none' }}
       _focus={{ boxShadow: 'none' }}
     >
