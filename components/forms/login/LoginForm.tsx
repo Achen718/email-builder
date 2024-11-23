@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
 import { userLogin } from '@/lib/features/auth/authActions';
-
+import { selectAuthLoadingAndCurrentUser } from '@/lib/features/auth/authSelectors';
 import FormInput from '@/components/forms/formInput/FormInput';
 
 const defaultFormFields = {
@@ -26,7 +26,10 @@ const LoginForm = () => {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { loading, currentUser, error } = useAppSelector((state) => state.auth);
+
+  const { loading, currentUser } = useAppSelector(
+    selectAuthLoadingAndCurrentUser
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
