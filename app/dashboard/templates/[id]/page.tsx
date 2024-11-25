@@ -1,5 +1,11 @@
+import DisplayEmailEditor from '@/components/EmailEditor/DisplayEmailEditor';
+
 const TemplatesIdPage = () => {
-  return <section>Templates Id Page</section>;
+  return (
+    <section>
+      <DisplayEmailEditor />
+    </section>
+  );
 };
 
 export default TemplatesIdPage;

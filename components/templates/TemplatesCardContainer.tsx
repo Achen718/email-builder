@@ -6,8 +6,12 @@ import { TemplatesCardContainerProps } from '@/types/templates';
 const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
   return (
     <>
-      <Heading my='6'>Template card Container</Heading>
-      <Grid templateColumns='repeat(auto-fit, minmax(220px, 1fr))' gap={6}>
+      <Heading>Template card Container</Heading>
+      <Grid
+        templateColumns='repeat(auto-fit, minmax(220px, 1fr))'
+        mt='5'
+        gap={6}
+      >
         {templates &&
           templates.map(({ id, name, displayMode, updatedAt }) => (
             <TemplatesCards
