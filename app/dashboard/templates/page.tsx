@@ -2,13 +2,7 @@
 import { useEffect, useState } from 'react';
 import TemplatesCardContainer from 'components/templates/TemplatesCardContainer';
 import { fetchMockTemplates } from '@/mocks/apiMocks';
-
-interface Template {
-  id: string;
-  name: string;
-  displayMode: string;
-  updatedAt: string;
-}
+import { Template } from '@/types/templates';
 
 const TemplatesPage = () => {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -23,7 +17,7 @@ const TemplatesPage = () => {
   }, []);
 
   return (
-    <section className='dashboard-home-container'>
+    <section className='templates-home-container'>
       {/* wrap protected routes */}
       <TemplatesCardContainer templates={templates} />
     </section>

@@ -1,5 +1,5 @@
-const TemplatesPage = () => {
+const TemplatesIdPage = () => {
   return <section>Templates Id Page</section>;
 };
 
-export default TemplatesPage;
+export default TemplatesIdPage;

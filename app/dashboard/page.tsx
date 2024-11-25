@@ -1,11 +1,10 @@
-'use client';
-import DashboardContent from '@/components/dashboard/content/DashboardContent';
+import DashboardHome from '@/components/dashboard/content/DashboardHome';
 
 const DashboardPage = () => {
   return (
     <section className='dashboard-home-container'>
       {/* wrap protected routes */}
-      <DashboardContent />
+      <DashboardHome />
     </section>
   );
 };

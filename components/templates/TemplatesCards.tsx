@@ -3,7 +3,6 @@ import NextLink from 'next/link';
 
 import {
   Box,
-  Center,
   useColorModeValue,
   Heading,
   Text,
@@ -11,22 +10,22 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { formatPostedDate } from '@/utils/formatDate';
-
+import { Template } from '@/types/templates';
 const IMAGE =
   'https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80';
 
-const TemplatesCards = ({ name, displayMode, id, updatedAt }) => {
+const TemplatesCard = ({ name, displayMode, id, updatedAt }: Template) => {
   const formattedPostedDate = formatPostedDate(updatedAt);
 
   return (
-    <Center py={12}>
+    <>
       <Box
         as={NextLink}
         href={`templates/${id}`}
         role={'group'}
         p={6}
         maxW={'330px'}
-        w={'full'}
+        m={2}
         bg={useColorModeValue('white', 'gray.800')}
         boxShadow={'2xl'}
         rounded={'lg'}
@@ -69,17 +68,22 @@ const TemplatesCards = ({ name, displayMode, id, updatedAt }) => {
           <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
             {displayMode}
           </Text>
-          <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
+          <Heading
+            fontSize={'md'}
+            as={'h4'}
+            fontFamily={'body'}
+            fontWeight={500}
+          >
             {name}
           </Heading>
           <Stack direction={'row'} align={'center'}>
-            <Text fontWeight={800} fontSize={'xl'}>
+            <Text fontWeight={800} fontSize={'sm'}>
               Last updated: {formattedPostedDate}
             </Text>
           </Stack>
         </Stack>
       </Box>
-    </Center>
+    </>
   );
 };
-export default TemplatesCards;
+export default TemplatesCard;
