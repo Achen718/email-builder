@@ -23,18 +23,6 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
             />
           ))}
       </Grid>
-      {/* <Center p={4}>
-        {templates &&
-          templates.map(({ id, name, displayMode, updatedAt }) => (
-            <TemplatesCards
-              key={id}
-              name={name}
-              displayMode={displayMode}
-              id={id}
-              updatedAt={updatedAt}
-            />
-          ))}
-      </Center> */}
     </>
   );
 };

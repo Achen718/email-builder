@@ -1,11 +1,15 @@
 'use client';
-import { useRef } from 'react';
-
+import { useRef, useEffect, useState } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
+import { fetchMockDesign, saveMockDesign } from '@/mocks/apiMocks';
 
-const DisplayEmailEditor = () => {
+interface DisplayEmailEditorProps {
+  templateId: string;
+}
+
+const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const emailEditorRef = useRef<EditorRef>(null);
-
+  const [templateDesign, setTemplateDesign] = useState<any>(null);
   const exportHtml = () => {
     const unlayer = emailEditorRef.current?.editor;
 
@@ -13,6 +17,27 @@ const DisplayEmailEditor = () => {
       const { design, html } = data;
       console.log('exportHtml', html);
       console.log(design);
+    });
+  };
+
+  useEffect(() => {
+    console.log('templateId');
+    const loadDesign = async () => {
+      const design = await fetchMockDesign(templateId);
+      setTemplateDesign(design);
+      emailEditorRef.current?.editor.loadDesign(design);
+    };
+
+    loadDesign();
+  }, [templateId]);
+
+  const saveDesign = () => {
+    const unlayer = emailEditorRef.current?.editor;
+
+    unlayer?.saveDesign((design) => {
+      // save to database
+      console.log('saveDesign', design);
+      alert('Design JSON has been logged in your developer console.');
     });
   };
 
@@ -30,6 +55,7 @@ const DisplayEmailEditor = () => {
     <div>
       <div>
         <button onClick={exportHtml}>Export HTML</button>
+        <button onClick={saveDesign}>Save Design</button>
       </div>
 
       <EmailEditor ref={emailEditorRef} onReady={onReady} />

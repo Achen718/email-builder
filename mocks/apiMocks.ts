@@ -1,16 +1,22 @@
 import { Template } from '../types/templates';
+import emailDesignMock from './emailDesignMock.json'; // Import your large JSON object
+import mockDesign from './mockDesign.json'; // Import your large JSON object
 
 const mockTemplates: Template[] = [
   {
     id: '1',
-    name: 'Template 1',
+    name: 'Sample Template 1',
+    design: mockDesign,
     displayMode: 'Mode 1',
+    createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
     id: '2',
+    design: emailDesignMock,
     name: 'Template 2',
     displayMode: 'Mode 2',
+    createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
@@ -56,6 +62,31 @@ export const fetchMockTemplates = (): Promise<Template[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockTemplates);
+    }, 500);
+  });
+};
+
+export const fetchMockDesign = async (templateId: string): Promise<any> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const template = mockTemplates.find((t) => t.id === templateId);
+      resolve(template ? template.design : null);
+    }, 500);
+  });
+};
+
+export const saveMockDesign = async (
+  templateId: string,
+  design: any
+): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const template = mockTemplates.find((t) => t.id === templateId);
+      if (template) {
+        template.design = design;
+        template.updatedAt = new Date().toISOString();
+      }
+      resolve();
     }, 500);
   });
 };
