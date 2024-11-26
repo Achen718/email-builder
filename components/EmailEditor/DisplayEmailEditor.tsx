@@ -32,8 +32,9 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const saveDesign = () => {
     const unlayer = emailEditorRef.current?.editor;
 
-    unlayer?.saveDesign((design) => {
+    unlayer?.saveDesign(async (design) => {
       // save to database
+      await saveMockDesign(templateId, design);
       console.log('saveDesign', design);
       alert('Design JSON has been logged in your developer console.');
     });
