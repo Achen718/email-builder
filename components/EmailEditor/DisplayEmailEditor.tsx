@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 import { fetchMockDesign, saveMockDesign } from '@/mocks/apiMocks';
 
@@ -9,7 +9,7 @@ interface DisplayEmailEditorProps {
 
 const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const emailEditorRef = useRef<EditorRef>(null);
-  const [templateDesign, setTemplateDesign] = useState<any>(null);
+
   const exportHtml = () => {
     const unlayer = emailEditorRef.current?.editor;
 
@@ -21,10 +21,8 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   };
 
   useEffect(() => {
-    console.log('templateId');
     const loadDesign = async () => {
       const design = await fetchMockDesign(templateId);
-      setTemplateDesign(design);
       emailEditorRef.current?.editor.loadDesign(design);
     };
 
@@ -52,14 +50,14 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   };
 
   return (
-    <div>
+    <>
       <div>
         <button onClick={exportHtml}>Export HTML</button>
         <button onClick={saveDesign}>Save Design</button>
       </div>
 
       <EmailEditor ref={emailEditorRef} onReady={onReady} />
-    </div>
+    </>
   );
 };
 
