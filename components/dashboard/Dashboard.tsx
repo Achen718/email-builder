@@ -1,5 +1,5 @@
 'use client';
-import { Flex, Box, useColorModeValue } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 import Sidebar from './side-bar/Sidebar';
 
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
