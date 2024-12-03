@@ -41,14 +41,30 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     saveDesign();
   };
 
+  // temp debounce
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
   const onDesignUpdate = (data) => {
     const unlayer = emailEditorRef.current?.editor;
     // Design has been updated by the user
 
-    onUpdateAutoSave(data);
     const { type, item, changes } = data;
     console.log('design:updated', type, item, changes);
+    // Debounce the onUpdateAutoSave function to limit the number of calls
 
+    // add to saga
+    const debouncedAutoSave = debounce(onUpdateAutoSave, 5000);
+    debouncedAutoSave(changes);
+
+    // undo/redo state
     unlayer?.canUndo((result) => {
       result ? setCanUndo(result) : setCanUndo(false);
     });
