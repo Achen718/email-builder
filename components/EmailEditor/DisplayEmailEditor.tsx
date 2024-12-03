@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
@@ -12,7 +12,10 @@ interface DisplayEmailEditorProps {
 
 const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const emailEditorRef = useRef<EditorRef>(null);
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
 
+  // commit templates in redux
   const exportHtml = () => {
     const unlayer = emailEditorRef.current?.editor;
 
@@ -23,15 +26,6 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     });
   };
 
-  useEffect(() => {
-    const loadDesign = async () => {
-      const design = await fetchMockDesign(templateId);
-      emailEditorRef.current?.editor.loadDesign(design);
-    };
-
-    loadDesign();
-  }, [templateId]);
-
   const saveDesign = () => {
     const unlayer = emailEditorRef.current?.editor;
 
@@ -39,8 +33,55 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
       // post to database
       await saveMockDesign(templateId, design);
       console.log('saveDesign', design);
-      alert('Design JSON has been logged in your developer console.');
     });
+  };
+
+  const onUpdateAutoSave = (updates) => {
+    // Design has been updated by the user
+    saveDesign();
+  };
+
+  const onDesignUpdate = (data) => {
+    const unlayer = emailEditorRef.current?.editor;
+    // Design has been updated by the user
+
+    onUpdateAutoSave(data);
+    const { type, item, changes } = data;
+    console.log('design:updated', type, item, changes);
+
+    unlayer?.canUndo((result) => {
+      result ? setCanUndo(result) : setCanUndo(false);
+    });
+    unlayer?.canRedo((result) => {
+      result ? setCanRedo(result) : setCanRedo(false);
+    });
+  };
+
+  const undo = () => {
+    const unlayer = emailEditorRef.current?.editor;
+    unlayer?.undo();
+  };
+
+  const redo = () => {
+    const unlayer = emailEditorRef.current?.editor;
+    unlayer?.redo();
+  };
+
+  const onDesignLoad = (data) => {
+    console.log('onDesignLoad', data);
+  };
+
+  const onLoad: EmailEditorProps['onLoad'] = async (unlayer) => {
+    console.log('onLoad', unlayer);
+    unlayer.addEventListener('design:loaded', onDesignLoad);
+    unlayer.addEventListener('design:updated', onDesignUpdate);
+    const design = await fetchMockDesign(templateId);
+    unlayer.loadDesign(design);
+
+    return () => {
+      unlayer.removeEventListener('design:loaded');
+      unlayer.removeEventListener('design:updated');
+    };
   };
 
   const onReady: EmailEditorProps['onReady'] = (unlayer) => {
@@ -50,6 +91,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     // unlayer.loadDesign(callback) or unlayer.exportHtml(callback)
     // const templateJson = { DESIGN JSON GOES HERE };
     // unlayer.loadDesign(templateJson);
+
     console.log('onReady', unlayer);
   };
 
@@ -60,9 +102,15 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
         <ButtonGroup colorScheme='blue' my='2' size='sm'>
           <Button onClick={exportHtml}>Export HTML</Button>
           <Button onClick={saveDesign}>Save Template</Button>
+          <Button onClick={undo} isDisabled={!canUndo}>
+            Undo
+          </Button>
+          <Button onClick={redo} isDisabled={!canRedo}>
+            Redo
+          </Button>
         </ButtonGroup>
       </EmailEditorHeading>
-      <EmailEditor ref={emailEditorRef} onReady={onReady} />
+      <EmailEditor ref={emailEditorRef} onReady={onReady} onLoad={onLoad} />
     </>
   );
 };
