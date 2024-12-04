@@ -1,8 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { userLogin, userSignUp } from './authActions';
 
-interface IAuthState {
-  userToken: string | null;
+import {
+  userSignUpRequest,
+  userSignUpSuccess,
+  userSignUpFailed,
+  userLoginRequest,
+  userLoginSuccess,
+  userLoginFailed,
+} from './authActions';
+
+export interface IAuthState {
   currentUser: string | null;
   success: boolean;
   error: string | null;
@@ -10,7 +17,6 @@ interface IAuthState {
 }
 
 const initialState: IAuthState = {
-  userToken: null,
   currentUser: null,
   success: false,
   error: null,
@@ -20,40 +26,40 @@ const initialState: IAuthState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    setAuthToken(state, action: PayloadAction<string | null>) {
-      state.userToken = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(userLogin.pending, (state: IAuthState) => {
+      .addCase(userSignUpRequest, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = false;
       })
-      .addCase(userLogin.fulfilled, (state: IAuthState, { payload }) => {
+      .addCase(userSignUpSuccess, (state, action) => {
         state.loading = false;
-        state.currentUser = payload;
-        state.userToken = payload.token;
-      })
-      .addCase(userLogin.rejected, (state: IAuthState, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? null;
-      })
-      .addCase(userSignUp.pending, (state: IAuthState) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(userSignUp.fulfilled, (state: IAuthState) => {
-        state.loading = false;
+        state.currentUser = action.payload;
         state.success = true;
       })
-      .addCase(userSignUp.rejected, (state: IAuthState, action) => {
+      .addCase(userSignUpFailed, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? null;
+        state.error = action.payload.error;
+        state.success = false;
+      })
+      .addCase(userLoginRequest, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(userLoginSuccess, (state, action) => {
+        state.loading = false;
+        state.currentUser = action.payload;
+        state.success = true;
+      })
+      .addCase(userLoginFailed, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.error;
+        state.success = false;
       });
   },
 });
 
-export const { setAuthToken } = authSlice.actions;
-export default authSlice.reducer;
+export const authReducer = authSlice.reducer;

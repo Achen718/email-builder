@@ -1,58 +1,43 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction } from '@reduxjs/toolkit';
+import { AUTH_ACTION_TYPES } from './authTypes';
 
-export const userSignUp = createAsyncThunk(
-  'auth/signUp',
-  async (
-    {
+export const setCurrentUser = createAction(
+  AUTH_ACTION_TYPES.SET_CURRENT_USER,
+  (user) => user
+);
+
+export const userSignUpRequest = createAction(
+  AUTH_ACTION_TYPES.USER_SIGN_UP_REQUEST,
+  ({ firstName, email, password }) => ({
+    payload: {
       firstName,
       email,
       password,
-    }: { firstName: string; email: string; password: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await fetch('/api/mockAuth/sign-up', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ firstName, email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error creating user');
-      }
-
-      return await response.json();
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
+    },
+  })
 );
 
-export const userLogin = createAsyncThunk(
-  'auth/login',
-  async (
-    { email, password }: { email: string; password: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await fetch('/api/mockAuth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+export const userSignUpSuccess = createAction(
+  AUTH_ACTION_TYPES.USER_SIGN_UP_SUCCESS,
+  (user) => ({
+    payload: { user },
+  })
+);
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
+export const userSignUpFailed = createAction(
+  AUTH_ACTION_TYPES.USER_SIGN_UP_FAILED
+);
+
+export const userLoginRequest = createAction(
+  AUTH_ACTION_TYPES.USER_LOGIN_REQUEST,
+  (email, password) => ({ payload: { email, password } })
+);
+
+export const userLoginSuccess = createAction(
+  AUTH_ACTION_TYPES.USER_LOGIN_SUCCESS,
+  (user) => ({ payload: { user } })
+);
+
+export const userLoginFailed = createAction(
+  AUTH_ACTION_TYPES.USER_LOGIN_FAILED
 );

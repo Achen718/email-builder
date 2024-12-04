@@ -1,6 +1,6 @@
 import { Template } from '../types/templates';
-import emailDesignMock from './emailDesignMock.json'; // Import your large JSON object
-import mockDesign from './mockDesign.json'; // Import your large JSON object
+import emailDesignMock from './designs/emailDesignMock.json'; // Import your large JSON object
+import mockDesign from './designs/mockDesign.json'; // Import your large JSON object
 
 const mockTemplates: Template[] = [
   {
@@ -62,7 +62,7 @@ export const fetchMockTemplates = (): Promise<Template[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockTemplates);
-    }, 500);
+    }, 2000);
   });
 };
 

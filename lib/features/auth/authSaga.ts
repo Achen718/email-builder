@@ -1,14 +1,49 @@
-import { all, call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { takeLatest, put, all, call } from 'redux-saga/effects';
+import {
+  userSignUpSuccess,
+  userSignUpFailed,
+  userLoginSuccess,
+  userLoginFailed,
+} from './authActions';
+import { signUp, userLogin } from '@/services/auth/authService';
+import { AUTH_ACTION_TYPES } from './authTypes';
 
-// worker Saga: will be fired on USER_FETCH_REQUESTED actions
-function* fetchUser(action) {
-  console.log('fetchUser', action);
+function* userSignUpAsync({ payload }) {
+  console.log(payload);
+  try {
+    const { firstName, email, password } = payload;
+    const { user } = yield call(signUp, firstName, email, password);
+    console.log(user);
+    yield put(userSignUpSuccess(user));
+  } catch (error) {
+    yield put(userSignUpFailed((error as Error).message));
+  }
 }
 
-function* mySaga() {
-  yield takeLatest('USER_FETCH_REQUESTED', fetchUser);
+function* userLoginAsync({ payload }) {
+  console.log(payload);
+  try {
+    const { email, password } = payload.user;
+    const userData = yield call(userLogin, email, password);
+    console.log(userData);
+    yield put(userLoginSuccess(userData));
+  } catch (error) {
+    yield put(userLoginFailed((error as Error).message));
+  }
+}
+
+export function* signInAfterSignUp(user) {
+  yield call(userLoginAsync, user);
+}
+
+export function* onSignUpRequest() {
+  yield takeLatest(AUTH_ACTION_TYPES.USER_SIGN_UP_REQUEST, userSignUpAsync);
+}
+
+export function* onSignUpSuccess() {
+  yield takeLatest(AUTH_ACTION_TYPES.USER_SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
 export function* authSagas() {
-  yield all([call(mySaga)]);
+  yield all([call(onSignUpRequest), call(onSignUpSuccess)]);
 }

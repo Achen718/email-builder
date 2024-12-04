@@ -4,9 +4,14 @@ import { IAuthState } from './authSlice';
 
 export const selectAuthReducer = (state: RootState): IAuthState => state.auth;
 
-export const selectLoading = createSelector(
+export const selectAuthLoading = createSelector(
   [selectAuthReducer],
   (auth) => auth.loading
+);
+
+export const selectAuthSuccess = createSelector(
+  [selectAuthReducer],
+  (auth) => auth.success
 );
 
 export const selectCurrentUser = createSelector(
@@ -15,7 +20,7 @@ export const selectCurrentUser = createSelector(
 );
 
 export const selectAuthLoadingAndCurrentUser = createSelector(
-  [selectLoading, selectCurrentUser],
+  [selectAuthLoading, selectCurrentUser],
   (loading, currentUser) => ({
     loading,
     currentUser,

@@ -8,7 +8,7 @@ interface LoginError {
 }
 
 interface SignUpResponse {
-  message: string;
+  user: { firstName: string; email: string; password: string };
 }
 
 interface User {
@@ -39,7 +39,9 @@ export const mockSignUp = (
         reject(new Error('User already exists'));
       } else {
         createUser({ firstName, email, password });
-        resolve({ message: 'User registered successfully' });
+        resolve({
+          user: { firstName, email, password },
+        });
       }
     }, 500);
   });

@@ -16,7 +16,11 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import FormInput from '@/components/forms/formInput/FormInput';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
-import { userSignUp } from '@/lib/features/auth/authActions';
+import { userSignUpRequest } from '@/lib/features/auth/authActions';
+import {
+  selectAuthLoading,
+  selectAuthSuccess,
+} from '@/lib/features/auth/authSelectors';
 
 const defaultFormFields = {
   firstName: '',
@@ -31,7 +35,14 @@ const SignUpForm = () => {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { loading, error, success } = useAppSelector((state) => state.auth);
+  const loading = useAppSelector(selectAuthLoading);
+  const success = useAppSelector(selectAuthSuccess);
+
+  useEffect(() => {
+    if (success) {
+      router.push('/dashboard');
+    }
+  }, [loading]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,13 +57,16 @@ const SignUpForm = () => {
       alert('Passwords do not match');
       return;
     }
-
-    dispatch(userSignUp({ firstName, email, password }));
+    try {
+      dispatch(userSignUpRequest({ firstName, email, password }));
+    } catch (error) {
+      console.error('Sign up error:', error);
+    }
   };
 
-  useEffect(() => {
-    if (success) router.push('/login');
-  }, [router, success]);
+  // useEffect(() => {
+  //   if (success) router.push('/login');
+  // }, [router, success]);
 
   return (
     <Flex
