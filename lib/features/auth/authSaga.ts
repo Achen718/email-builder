@@ -5,10 +5,13 @@ import {
   userLoginSuccess,
   userLoginFailed,
 } from './authActions';
-import { signUp, userLogin } from '@/services/auth/authService';
 import { AUTH_ACTION_TYPES } from './authTypes';
+import { signUp, userLogin } from '@/services/auth/authService';
+import { PayloadAction } from '@reduxjs/toolkit';
 
-function* userSignUpAsync({ payload }) {
+function* userSignUpAsync({
+  payload,
+}: PayloadAction<{ firstName: string; email: string; password: string }>) {
   console.log(payload);
   try {
     const { firstName, email, password } = payload;
@@ -20,7 +23,9 @@ function* userSignUpAsync({ payload }) {
   }
 }
 
-function* userLoginAsync({ payload }) {
+function* userLoginAsync({
+  payload,
+}: PayloadAction<{ user: { email: string; password: string } }>): Generator {
   console.log(payload);
   try {
     const { email, password } = payload.user;
