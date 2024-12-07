@@ -17,7 +17,13 @@ interface User {
   password: string;
 }
 
-const mockDatabase: User[] = [];
+const mockDatabase: User[] = [
+  {
+    firstName: 'Alvin',
+    email: 'email@example.com',
+    password: 'password',
+  },
+];
 
 const findUserByEmail = (email: string): User | undefined => {
   return mockDatabase.find((user) => user.email === email);

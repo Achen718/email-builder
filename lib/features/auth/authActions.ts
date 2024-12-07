@@ -25,7 +25,8 @@ export const userSignUpSuccess = createAction(
 );
 
 export const userSignUpFailed = createAction(
-  AUTH_ACTION_TYPES.USER_SIGN_UP_FAILED
+  AUTH_ACTION_TYPES.USER_SIGN_UP_FAILED,
+  (error) => ({ payload: { error } })
 );
 
 export const userLoginRequest = createAction(
@@ -39,5 +40,6 @@ export const userLoginSuccess = createAction(
 );
 
 export const userLoginFailed = createAction(
-  AUTH_ACTION_TYPES.USER_LOGIN_FAILED
+  AUTH_ACTION_TYPES.USER_LOGIN_FAILED,
+  (error) => ({ payload: { error } })
 );

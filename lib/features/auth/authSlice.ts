@@ -35,7 +35,6 @@ const authSlice = createSlice({
         state.success = false;
       })
       .addCase(userSignUpSuccess, (state, action) => {
-        console.log(action.payload);
         state.loading = false;
         state.currentUser = action.payload.user;
         state.success = true;
