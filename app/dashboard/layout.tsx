@@ -1,4 +1,5 @@
 import Dashboard from '@/components/dashboard/Dashboard';
+import PrivateRoute from '@/components/protected-routes/PrivateRoute';
 
 export default function DashboardLayout({
   children,
@@ -6,8 +7,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section>
-      <Dashboard>{children}</Dashboard>
-    </section>
+    <PrivateRoute>
+      <section>
+        <Dashboard>{children}</Dashboard>
+      </section>
+    </PrivateRoute>
   );
 }
