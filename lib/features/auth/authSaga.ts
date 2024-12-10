@@ -16,7 +16,6 @@ function* userSignUpAsync({
   try {
     const { firstName, email, password } = payload;
     const { user } = yield call(signUp, firstName, email, password);
-    console.log(user);
     yield put(userSignUpSuccess(user));
   } catch (error) {
     yield put(userSignUpFailed((error as Error).message));
@@ -30,7 +29,6 @@ function* userLoginAsync({
   try {
     const { email, password } = payload.user;
     const userData = yield call(userLogin, email, password);
-    console.log(userData);
     yield put(userLoginSuccess(userData));
   } catch (error) {
     yield put(userLoginFailed((error as Error).message));

@@ -11,7 +11,7 @@ import {
   useColorModeValue,
   Link,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import FormInput from '@/components/forms/formInput/FormInput';
@@ -44,13 +44,13 @@ const SignUpForm = () => {
     }
   }, [loading]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
