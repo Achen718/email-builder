@@ -9,10 +9,23 @@ import { AUTH_ACTION_TYPES } from './authTypes';
 import { signUp, userLogin } from '@/services/auth/authService';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-function* userSignUpAsync({
+interface IUserSignUpData {
+  firstName: string;
+  email: string;
+  password: string;
+}
+interface IUserData {
+  email: string;
+  password: string;
+}
+
+interface IUser {
+  user: IUserData;
+}
+
+export function* userSignUpAsync({
   payload,
-}: PayloadAction<{ firstName: string; email: string; password: string }>) {
-  console.log(payload);
+}: PayloadAction<IUserSignUpData>): Generator {
   try {
     const { firstName, email, password } = payload;
     const { user } = yield call(signUp, firstName, email, password);
@@ -22,10 +35,7 @@ function* userSignUpAsync({
   }
 }
 
-function* userLoginAsync({
-  payload,
-}: PayloadAction<{ user: { email: string; password: string } }>): Generator {
-  console.log(payload);
+export function* userLoginAsync(payload: IUser): Generator {
   try {
     const { email, password } = payload.user;
     const userData = yield call(userLogin, email, password);
@@ -35,8 +45,8 @@ function* userLoginAsync({
   }
 }
 
-export function* signInAfterSignUp(user) {
-  yield call(userLoginAsync, user);
+export function* signInAfterSignUp({ payload }: PayloadAction<IUser>) {
+  yield call(userLoginAsync, payload);
 }
 
 export function* onSignUpRequest() {
