@@ -1,45 +1,28 @@
 'use client';
-import {
-  Flex,
-  Box,
-  Stack,
-  Button,
-  Heading,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Link } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
-import { userLogin } from '@/lib/features/auth/authActions';
+import { userLoginRequest } from '@/lib/features/auth/authActions';
+import { loginFormFields } from '@/config/forms/formFieldsConfig';
 import { selectAuthLoadingAndCurrentUser } from '@/lib/features/auth/authSelectors';
-import FormInput from '@/components/forms/formInput/FormInput';
-
-const defaultFormFields = {
-  email: '',
-  password: '',
-};
+import Form from '@/components/forms/Form';
 
 const LoginForm = () => {
-  const [formFields, setFormFields] = useState(defaultFormFields);
-  const { email, password } = formFields;
-
   const router = useRouter();
   const dispatch = useAppDispatch();
-
   const { loading, currentUser } = useAppSelector(
     selectAuthLoadingAndCurrentUser
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setFormFields({ ...formFields, [name]: value });
+  const initialValues = {
+    email: '',
+    password: '',
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    dispatch(userLogin({ email, password }));
+  const handleSubmit = (formData: { [key: string]: string }) => {
+    dispatch(userLoginRequest(formData.email, formData.password));
   };
 
   useEffect(() => {
@@ -49,69 +32,23 @@ const LoginForm = () => {
   }, [router, currentUser]);
 
   return (
-    <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
+    <Form
+      title='Sign in to your account'
+      fields={loginFormFields}
+      onSubmit={handleSubmit}
+      initialValues={initialValues}
+      buttonText='Login'
+      loading={loading}
     >
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
-        </Stack>
-        <Box
-          rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
-          p={8}
-        >
-          <Stack spacing={4}>
-            <form onSubmit={handleSubmit}>
-              <FormInput
-                id='email'
-                label='Email address'
-                name='email'
-                type='email'
-                value={email}
-                onChange={handleChange}
-                isRequired
-              />
-              <FormInput
-                id='password'
-                label='Password'
-                name='password'
-                type='password'
-                value={password}
-                onChange={handleChange}
-                isRequired
-              />
-              <Stack spacing={10}>
-                <Stack
-                  direction={{ base: 'column', sm: 'row' }}
-                  align={'start'}
-                  justify={'space-between'}
-                >
-                  <Text color={'blue.400'}>Forgot password?</Text>
-                </Stack>
-                <Button
-                  isLoading={loading}
-                  loadingText='Submitting'
-                  bg={'blue.400'}
-                  color={'white'}
-                  _hover={{
-                    bg: 'blue.500',
-                  }}
-                  type='submit'
-                  name='login'
-                >
-                  Login
-                </Button>
-              </Stack>
-            </form>
-          </Stack>
-        </Box>
-      </Stack>
-    </Flex>
+      <Link
+        as={NextLink}
+        href='/forgot-password'
+        color={'blue.400'}
+        fontSize={'sm'}
+      >
+        Forgot password?
+      </Link>
+    </Form>
   );
 };
 

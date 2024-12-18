@@ -62,7 +62,7 @@ export const fetchMockTemplates = (): Promise<Template[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockTemplates);
-    }, 2000);
+    }, 500);
   });
 };
 
