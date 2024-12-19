@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, HStack, Stack, Button, Text, Link } from '@chakra-ui/react';
+import { Box, HStack, Stack, Link } from '@chakra-ui/react';
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';

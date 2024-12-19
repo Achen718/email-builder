@@ -10,13 +10,13 @@ import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormButton from '@/components/forms/formButton/FormButton';
 
-const defaultFormValues = {
+const defaultFormFields = {
   email: '',
   password: '',
 };
 
 const LoginForm = () => {
-  const [formFields, setFormFields] = useState(defaultFormValues);
+  const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
   const router = useRouter();

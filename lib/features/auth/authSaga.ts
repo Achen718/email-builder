@@ -17,10 +17,6 @@ interface IUserLoginData {
   password: string;
 }
 
-interface IUser {
-  user: IUserLoginData;
-}
-
 export function* userSignUpAsync({ payload }: PayloadAction<IUserSignUpData>) {
   try {
     const { firstName, email, password } = payload;
