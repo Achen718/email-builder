@@ -31,7 +31,7 @@ export const userSignUpFailed = createAction(
 
 export const userLoginRequest = createAction(
   AUTH_ACTION_TYPES.USER_LOGIN_REQUEST,
-  (email, password) => ({ payload: { email, password } })
+  (email: string, password: string) => ({ payload: { email, password } })
 );
 
 export const userLoginSuccess = createAction(

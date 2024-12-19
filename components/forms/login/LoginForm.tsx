@@ -10,19 +10,20 @@ import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormButton from '@/components/forms/formButton/FormButton';
 
+const defaultFormValues = {
+  email: '',
+  password: '',
+};
+
 const LoginForm = () => {
+  const [formFields, setFormFields] = useState(defaultFormValues);
+  const { email, password } = formFields;
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { loading, currentUser } = useAppSelector(
     selectAuthLoadingAndCurrentUser
   );
-
-  const initialValues = {
-    email: '',
-    password: '',
-  };
-
-  const [formFields, setFormFields] = useState(initialValues);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,7 +32,7 @@ const LoginForm = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(userLoginRequest(formFields.email, formFields.password));
+    dispatch(userLoginRequest(email, password));
   };
 
   useEffect(() => {

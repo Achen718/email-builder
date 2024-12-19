@@ -9,23 +9,19 @@ import { AUTH_ACTION_TYPES } from './authTypes';
 import { signUp, userLogin } from '@/services/auth/authService';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-interface IUserSignUpData {
+interface IUserSignUpData extends IUserLoginData {
   firstName: string;
-  email: string;
-  password: string;
 }
-interface IUserData {
+interface IUserLoginData {
   email: string;
   password: string;
 }
 
 interface IUser {
-  user: IUserData;
+  user: IUserLoginData;
 }
 
-export function* userSignUpAsync({
-  payload,
-}: PayloadAction<IUserSignUpData>): Generator {
+export function* userSignUpAsync({ payload }: PayloadAction<IUserSignUpData>) {
   try {
     const { firstName, email, password } = payload;
     const { user } = yield call(signUp, firstName, email, password);
@@ -35,18 +31,23 @@ export function* userSignUpAsync({
   }
 }
 
-export function* userLoginAsync(payload: IUser): Generator {
+export function* userLoginAsync({
+  payload,
+}: PayloadAction<IUserLoginData>): Generator {
   try {
-    const { email, password } = payload.user;
+    console.log(payload);
+    const { email, password } = payload;
     const userData = yield call(userLogin, email, password);
+    console.log(userData);
     yield put(userLoginSuccess(userData));
   } catch (error) {
+    console.log(error);
     yield put(userLoginFailed((error as Error).message));
   }
 }
 
-export function* signInAfterSignUp({ payload }: PayloadAction<IUser>) {
-  yield call(userLoginAsync, payload);
+export function* signInAfterSignUp(action: PayloadAction<IUserSignUpData>) {
+  yield call(userLoginAsync, action);
 }
 
 export function* onSignUpRequest() {
@@ -57,6 +58,14 @@ export function* onSignUpSuccess() {
   yield takeLatest(AUTH_ACTION_TYPES.USER_SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
+export function* onLoginRequest() {
+  yield takeLatest(AUTH_ACTION_TYPES.USER_LOGIN_REQUEST, userLoginAsync);
+}
+
 export function* authSagas() {
-  yield all([call(onSignUpRequest), call(onSignUpSuccess)]);
+  yield all([
+    call(onSignUpRequest),
+    call(onSignUpSuccess),
+    call(onLoginRequest),
+  ]);
 }
