@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Template } from '../types/templates';
 import emailDesignMock from './designs/emailDesignMock.json'; // Import your large JSON object
 import mockDesign from './designs/mockDesign.json'; // Import your large JSON object
