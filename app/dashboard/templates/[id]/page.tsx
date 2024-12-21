@@ -1,4 +1,3 @@
-'use client';
 import DisplayEmailEditor from '@/components/EmailEditor/DisplayEmailEditor';
 
 import { fetchMockTemplates } from '@/mocks/apiMocks';
