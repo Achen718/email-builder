@@ -3,6 +3,7 @@ export interface Template {
   name: string;
   displayMode: string;
   updatedAt: string;
+  design?: any; // Remove after adding database
 }
 
 export interface TemplatesCardContainerProps {

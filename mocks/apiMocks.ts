@@ -9,7 +9,6 @@ const mockTemplates: Template[] = [
     name: 'Sample Template 1',
     design: mockDesign,
     displayMode: 'Mode 1',
-    createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
@@ -17,7 +16,6 @@ const mockTemplates: Template[] = [
     design: emailDesignMock,
     name: 'Template 2',
     displayMode: 'Mode 2',
-    createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
