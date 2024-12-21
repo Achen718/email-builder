@@ -2,8 +2,6 @@
 
 import {
   Stack,
-  ButtonGroup,
-  Button,
   useColorModeValue,
   Heading,
   Text,
@@ -13,6 +11,7 @@ import {
 interface EmailEditorHeadingProps {
   templateTitle: string;
   displayName: string;
+  children: React.ReactNode;
 }
 
 const EmailEditorHeading: React.FC<EmailEditorHeadingProps> = ({
