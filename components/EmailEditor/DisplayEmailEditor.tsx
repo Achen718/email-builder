@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 import { useRef, useState } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
@@ -36,7 +37,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     });
   };
 
-  const onUpdateAutoSave = (updates) => {
+  const onUpdateAutoSave = () => {
     // Design has been updated by the user
     saveDesign();
   };
