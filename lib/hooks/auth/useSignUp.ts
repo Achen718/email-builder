@@ -1,4 +1,4 @@
-import { useFetch } from './useFetch';
+import { useFetch } from '../useFetch';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import {
