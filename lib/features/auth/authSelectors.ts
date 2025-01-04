@@ -21,7 +21,7 @@ export const selectCurrentUser = createSelector(
 
 export const selectAuthToken = createSelector(
   [selectAuthReducer],
-  (auth) => auth.token
+  (auth) => auth.userToken
 );
 
 export const selectAuthLoadingAndCurrentUser = createSelector(
