@@ -58,8 +58,8 @@ export const fetchUserData = async (token: string) => {
       throw new Error('Failed to fetch user data');
     }
     const { firstName, email } = await response.json();
-    console.log(firstName, email);
-    return firstName, email;
+
+    return { firstName, email };
   } catch (error) {
     console.error('Fetch user data error:', error);
   }

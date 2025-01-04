@@ -79,12 +79,10 @@ export const fetchMockUserData = (token: string): Promise<User | null> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const email = verifyToken(token);
-      console.log(email);
       if (!email) {
         reject(new Error('Invalid token'));
       } else {
         const user = findUserByEmail(email);
-        console.log(user);
         resolve(user || null);
       }
     }, 500);
