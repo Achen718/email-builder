@@ -5,7 +5,6 @@ export const useForm = <T extends Record<string, any>>(initialValue: T) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormFields((prevFields) => ({ ...prevFields, [name]: value }));
   };
 

@@ -14,7 +14,7 @@ export const userLogin = async (email: string, password: string) => {
     }
 
     const data = await response.json();
-    localStorage.setItem('token', data.token);
+    localStorage.setItem('userToken', data.userToken);
     return data;
   } catch (error) {
     console.error('Login error:', error);
@@ -42,5 +42,25 @@ export const signUp = async (
     return await response.json();
   } catch (error) {
     console.error('Sign up error:', error);
+  }
+};
+
+export const fetchUserData = async (token: string) => {
+  try {
+    const response = await fetch('/api/mockAuth/userAuth', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user data');
+    }
+    const { firstName, email } = await response.json();
+    console.log(firstName, email);
+    return firstName, email;
+  } catch (error) {
+    console.error('Fetch user data error:', error);
   }
 };

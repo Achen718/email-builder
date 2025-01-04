@@ -3,7 +3,7 @@ import { AUTH_ACTION_TYPES } from './authTypes';
 
 export const setCurrentUser = createAction(
   AUTH_ACTION_TYPES.SET_CURRENT_USER,
-  (user) => user
+  (user, userToken) => ({ payload: { user, userToken } })
 );
 
 export const userSignUpRequest = createAction(
@@ -36,7 +36,7 @@ export const userLoginRequest = createAction(
 
 export const userLoginSuccess = createAction(
   AUTH_ACTION_TYPES.USER_LOGIN_SUCCESS,
-  (user) => ({ payload: { user } })
+  (user, userToken) => ({ payload: { user, userToken } })
 );
 
 export const userLoginFailed = createAction(

@@ -1,6 +1,6 @@
 interface LoginResponse {
   user: { email: string };
-  token: string;
+  userToken: string;
 }
 
 interface LoginError {
@@ -17,7 +17,13 @@ interface User {
   password: string;
 }
 
-const mockDatabase: User[] = [];
+const mockDatabase: User[] = [
+  {
+    firstName: 'Alvin',
+    email: 'email@example.com',
+    password: 'password',
+  },
+];
 
 const findUserByEmail = (email: string): User | undefined => {
   return mockDatabase.find((user) => user.email === email);
@@ -54,7 +60,7 @@ export const mockLogin = (
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (email === 'email@example.com' && password === 'password') {
-        resolve({ token: 'fake-jwt-token', user: { email } });
+        resolve({ userToken: 'fake-jwt-token', user: { email } });
       } else {
         reject(new Error('Invalid credentials'));
       }
@@ -62,10 +68,25 @@ export const mockLogin = (
   });
 };
 
-export const mockLogout = (): Promise<LoginError> => {
-  return new Promise((resolve) => {
+export const verifyToken = (token: string): string | null => {
+  if (token === 'fake-jwt-token') {
+    return 'email@example.com';
+  }
+  return null;
+};
+
+export const fetchMockUserData = (token: string): Promise<User | null> => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve({ message: 'Logged out successfully' });
+      const email = verifyToken(token);
+      console.log(email);
+      if (!email) {
+        reject(new Error('Invalid token'));
+      } else {
+        const user = findUserByEmail(email);
+        console.log(user);
+        resolve(user || null);
+      }
     }, 500);
   });
 };

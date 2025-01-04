@@ -7,6 +7,7 @@ import {
   userLoginRequest,
   userLoginSuccess,
   userLoginFailed,
+  setCurrentUser,
 } from './authActions';
 
 export interface IAuthState {
@@ -14,9 +15,11 @@ export interface IAuthState {
   success: boolean;
   error: string | null;
   loading: boolean;
+  userToken: string | null;
 }
 
 const initialState: IAuthState = {
+  userToken: null,
   currentUser: null,
   success: false,
   error: null,
@@ -53,11 +56,16 @@ const authSlice = createSlice({
         state.loading = false;
         state.currentUser = action.payload.user;
         state.success = true;
+        state.userToken = action.payload.userToken;
       })
       .addCase(userLoginFailed, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
         state.success = false;
+      })
+      .addCase(setCurrentUser, (state, action) => {
+        state.userToken = action.payload.userToken;
+        state.currentUser = action.payload.user;
       });
   },
 });
