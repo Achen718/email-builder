@@ -9,18 +9,33 @@ import { AUTH_ACTION_TYPES } from './authTypes';
 import { signUp, userLogin } from '@/services/auth/authService';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-interface IUserSignUpData extends IUserLoginData {
+export interface IUserSignUpData extends IUserLoginData {
   firstName: string;
 }
-interface IUserLoginData {
+export interface IUserLoginData {
   email: string;
   password: string;
 }
+export interface IUserData {
+  user: IUserLoginData;
+}
 
-export function* userSignUpAsync({ payload }: PayloadAction<IUserSignUpData>) {
+function* handleUserLogin(email: string, password: string): Generator {
+  try {
+    const userData = yield call(userLogin, email, password);
+    yield put(userLoginSuccess(userData));
+  } catch (error) {
+    yield put(userLoginFailed((error as Error).message));
+  }
+}
+
+export function* userSignUpAsync({
+  payload,
+}: PayloadAction<IUserSignUpData>): Generator {
   try {
     const { firstName, email, password } = payload;
     const { user } = yield call(signUp, firstName, email, password);
+    console.log(user);
     yield put(userSignUpSuccess(user));
   } catch (error) {
     yield put(userSignUpFailed((error as Error).message));
@@ -30,20 +45,19 @@ export function* userSignUpAsync({ payload }: PayloadAction<IUserSignUpData>) {
 export function* userLoginAsync({
   payload,
 }: PayloadAction<IUserLoginData>): Generator {
-  try {
-    console.log(payload);
-    const { email, password } = payload;
-    const userData = yield call(userLogin, email, password);
-    console.log(userData);
-    yield put(userLoginSuccess(userData));
-  } catch (error) {
-    console.log(error);
-    yield put(userLoginFailed((error as Error).message));
-  }
+  const { email, password } = payload;
+  yield call(handleUserLogin, email, password);
 }
 
-export function* signInAfterSignUp(action: PayloadAction<IUserSignUpData>) {
-  yield call(userLoginAsync, action);
+export function* userLoginAfterSignUpAsync({
+  payload,
+}: PayloadAction<IUserData>): Generator {
+  const { email, password } = payload.user;
+  yield call(handleUserLogin, email, password);
+}
+
+export function* signInAfterSignUp(action: PayloadAction<IUserData>) {
+  yield call(userLoginAfterSignUpAsync, action);
 }
 
 export function* onSignUpRequest() {
