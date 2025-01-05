@@ -24,7 +24,7 @@ export interface IUserData {
 function* handleUserLogin(email: string, password: string): Generator {
   try {
     const { user, userToken } = yield call(userLogin, email, password);
-    console.log(user, userToken);
+
     yield put(userLoginSuccess(user, userToken));
     yield put(setCurrentUser(user, userToken));
   } catch (error) {
@@ -67,7 +67,6 @@ export function* initializeToken(): Generator {
   if (token) {
     try {
       const user = yield call(fetchUserData, token);
-      console.log(user);
       yield put(setCurrentUser(user, token));
     } catch (error) {
       console.error('Failed to fetch user data:', error);
