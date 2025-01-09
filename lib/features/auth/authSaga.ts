@@ -4,7 +4,8 @@ import {
   userSignUpFailed,
   userLoginSuccess,
   userLoginFailed,
-  setCurrentUser,
+  setCurrentUserStart,
+  setCurrentUserSuccess,
 } from './authActions';
 import { AUTH_ACTION_TYPES } from './authTypes';
 import { signUp, userLogin, fetchUserData } from '@/services/auth/authService';
@@ -26,7 +27,7 @@ function* handleUserLogin(email: string, password: string): Generator {
     const { user, userToken } = yield call(userLogin, email, password);
 
     yield put(userLoginSuccess(user, userToken));
-    yield put(setCurrentUser(user, userToken));
+    yield put(setCurrentUserSuccess(user, userToken));
   } catch (error) {
     yield put(userLoginFailed((error as Error).message));
   }
@@ -63,14 +64,17 @@ export function* signInAfterSignUp(action: PayloadAction<IUserData>) {
 }
 
 export function* initializeToken(): Generator {
+  yield put(setCurrentUserStart());
   const token = localStorage.getItem('userToken');
   if (token) {
     try {
       const user = yield call(fetchUserData, token);
-      yield put(setCurrentUser(user, token));
+      yield put(setCurrentUserSuccess(user, token));
     } catch (error) {
       console.error('Failed to fetch user data:', error);
     }
+  } else {
+    yield put(setCurrentUserSuccess(null, null));
   }
 }
 

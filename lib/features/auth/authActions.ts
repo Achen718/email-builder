@@ -1,8 +1,12 @@
 import { createAction } from '@reduxjs/toolkit';
 import { AUTH_ACTION_TYPES } from './authTypes';
 
-export const setCurrentUser = createAction(
-  AUTH_ACTION_TYPES.SET_CURRENT_USER,
+export const setCurrentUserStart = createAction(
+  AUTH_ACTION_TYPES.SET_CURRENT_USER_START
+);
+
+export const setCurrentUserSuccess = createAction(
+  AUTH_ACTION_TYPES.SET_CURRENT_USER_SUCCESS,
   (user, userToken) => ({ payload: { user, userToken } })
 );
 
