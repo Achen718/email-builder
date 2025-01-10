@@ -9,6 +9,7 @@ interface LoginError {
 
 interface SignUpResponse {
   user: { firstName: string; email: string; password: string };
+  userToken: string;
 }
 
 interface User {
@@ -47,6 +48,7 @@ export const mockSignUp = (
         createUser({ firstName, email, password });
         resolve({
           user: { firstName, email, password },
+          userToken: 'fake-jwt-token',
         });
       }
     }, 500);
