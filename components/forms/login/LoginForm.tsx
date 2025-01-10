@@ -66,12 +66,7 @@ const LoginForm = () => {
           <FormButton buttonText='Login' loading={loading} type='submit' />
         </Stack>
         <Box mt={2}>
-          <Link
-            as={NextLink}
-            href='/forgot-password'
-            color={'blue.400'}
-            fontSize={'sm'}
-          >
+          <Link as={NextLink} href='/' color={'blue.400'} fontSize={'sm'}>
             Forgot password?
           </Link>
         </Box>
