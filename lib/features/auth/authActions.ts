@@ -19,8 +19,8 @@ export const userSignUpRequest = createAction(
 
 export const userSignUpSuccess = createAction(
   AUTH_ACTION_TYPES.USER_SIGN_UP_SUCCESS,
-  (user) => ({
-    payload: { user },
+  (user, userToken) => ({
+    payload: { user, userToken },
   })
 );
 

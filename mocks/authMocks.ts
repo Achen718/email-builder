@@ -1,3 +1,7 @@
+import bcrypt from 'bcryptjs';
+
+const SALT_ROUNDS = 10;
+
 interface LoginResponse {
   user: { email: string };
   userToken: string;
@@ -8,7 +12,7 @@ interface LoginError {
 }
 
 interface SignUpResponse {
-  user: { firstName: string; email: string; password: string };
+  user: User;
   userToken: string;
 }
 
@@ -18,13 +22,22 @@ interface User {
   password: string;
 }
 
-const mockDatabase: User[] = [
-  {
+const mockDatabase: User[] = [];
+
+const initializeMockDatabase = async () => {
+  const hashedPassword = await bcrypt.hash('password', SALT_ROUNDS);
+  mockDatabase.push({
     firstName: 'Alvin',
     email: 'email@example.com',
-    password: 'password',
-  },
-];
+    password: hashedPassword,
+  });
+};
+
+initializeMockDatabase();
+
+const generateFakeToken = (email: string): string => {
+  return btoa(`${email}:${new Date().getTime()}`);
+};
 
 const findUserByEmail = (email: string): User | undefined => {
   return mockDatabase.find((user) => user.email === email);
@@ -34,47 +47,56 @@ const createUser = (user: User): void => {
   mockDatabase.push(user);
 };
 
-export const mockSignUp = (
+export const mockSignUp = async (
   firstName: string,
   email: string,
   password: string
 ): Promise<SignUpResponse> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const existingUser = findUserByEmail(email);
-      if (existingUser) {
+  return new Promise(async (resolve, reject) => {
+    setTimeout(async () => {
+      const userExists = mockDatabase.some((user) => user.email === email);
+      if (userExists) {
         reject(new Error('User already exists'));
       } else {
-        createUser({ firstName, email, password });
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+        const newUser = { firstName, email, password: hashedPassword };
+        createUser(newUser);
+        const userToken = generateFakeToken(email);
         resolve({
+          userToken,
           user: { firstName, email, password },
-          userToken: 'fake-jwt-token',
         });
       }
     }, 500);
   });
 };
 
-export const mockLogin = (
+export const mockLogin = async (
   email: string,
   password: string
 ): Promise<LoginResponse> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email === 'email@example.com' && password === 'password') {
-        resolve({ userToken: 'fake-jwt-token', user: { email } });
+  return new Promise(async (resolve, reject) => {
+    setTimeout(async () => {
+      const user = findUserByEmail(email);
+      if (user && (await bcrypt.compare(password, user.password))) {
+        const userToken = generateFakeToken(email);
+        resolve({ userToken, user: { email } });
       } else {
-        reject(new Error('Invalid credentials'));
+        reject(new Error('Invalid credentials, failed'));
       }
     }, 500);
   });
 };
 
 export const verifyToken = (token: string): string | null => {
-  if (token === 'fake-jwt-token') {
-    return 'email@example.com';
+  try {
+    const decoded = atob(token);
+    const [email] = decoded.split(':');
+    const user = mockDatabase.find((user) => user.email === email);
+    return user ? email : null;
+  } catch {
+    return null;
   }
-  return null;
 };
 
 export const fetchMockUserData = (token: string): Promise<User | null> => {

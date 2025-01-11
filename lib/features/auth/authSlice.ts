@@ -41,6 +41,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.currentUser = action.payload.user;
         state.success = true;
+        state.userToken = action.payload.userToken;
       })
       .addCase(userSignUpFailed, (state, action) => {
         state.loading = false;

@@ -24,7 +24,6 @@ export interface IUserData {
 function* handleUserLogin(email: string, password: string): Generator {
   try {
     const { user, userToken } = yield call(userLogin, email, password);
-
     yield put(userLoginSuccess(user, userToken));
     yield put(setCurrentUser(user, userToken));
   } catch (error) {
@@ -37,8 +36,8 @@ export function* userSignUpAsync({
 }: PayloadAction<IUserSignUpData>): Generator {
   try {
     const { firstName, email, password } = payload;
-    const { user } = yield call(signUp, firstName, email, password);
-    yield put(userSignUpSuccess(user));
+    const { user, userToken } = yield call(signUp, firstName, email, password);
+    yield put(userSignUpSuccess(user, userToken));
   } catch (error) {
     yield put(userSignUpFailed((error as Error).message));
   }
