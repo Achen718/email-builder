@@ -1,11 +1,9 @@
 'use client';
-import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { Box, Stack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
 import { userLoginRequest } from '@/lib/features/auth/authActions';
-import { selectAuthLoadingAndCurrentUser } from '@/lib/features/auth/authSelectors';
 import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormButton from '@/components/forms/formButton/FormButton';
@@ -19,11 +17,8 @@ const LoginForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  const router = useRouter();
   const dispatch = useAppDispatch();
-  const { loading, currentUser } = useAppSelector(
-    selectAuthLoadingAndCurrentUser
-  );
+  const { loading } = useAppSelector((state) => state.auth);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,12 +29,6 @@ const LoginForm = () => {
     e.preventDefault();
     dispatch(userLoginRequest(email, password));
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      router.push('/dashboard');
-    }
-  }, [router, currentUser]);
 
   return (
     <FormContainer title='Sign in to your account'>
