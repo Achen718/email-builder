@@ -43,11 +43,8 @@ const SignUpForm = () => {
       alert('Passwords do not match');
       return;
     }
-    try {
-      dispatch(userSignUpRequest({ firstName, email, password }));
-    } catch (error) {
-      console.error('Sign up error:', error);
-    }
+
+    dispatch(userSignUpRequest({ firstName, email, password }));
   };
 
   useEffect(() => {
