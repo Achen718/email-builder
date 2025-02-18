@@ -8,6 +8,13 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
+export const footerLinks = [
+  { name: 'Home', href: '#' },
+  { name: 'About', href: '#' },
+  { name: 'Blog', href: '#' },
+  { name: 'Contact', href: '#' },
+];
+
 const Footer = () => {
   return (
     <Box
@@ -23,19 +30,12 @@ const Footer = () => {
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}
       >
-        <Stack direction={'row'} spacing={6}>
-          <Box as='a' href={'#'}>
-            Home
-          </Box>
-          <Box as='a' href={'#'}>
-            About
-          </Box>
-          <Box as='a' href={'#'}>
-            Blog
-          </Box>
-          <Box as='a' href={'#'}>
-            Contact
-          </Box>
+        <Stack direction={'row'} spacing={6} id='footer-links'>
+          {footerLinks.map((link) => (
+            <Box as='a' href={link.href} key={link.name}>
+              {link.name}
+            </Box>
+          ))}
         </Stack>
         <Text>© 2022 Chakra Templates. All rights reserved</Text>
       </Container>
