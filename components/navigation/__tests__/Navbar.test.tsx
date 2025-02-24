@@ -1,15 +1,11 @@
 import '@testing-library/jest-dom';
-import { screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { renderProviders } from '@/utils/test.utils';
 import Navbar from '@/components/navigation/Navbar';
+import { Box } from '@chakra-ui/react';
+import { useMediaQuery } from '@chakra-ui/react';
 
 describe('Navbar', () => {
-  beforeAll(() => {
-    // Set the viewport size to a value that includes the Sign Up button
-    window.innerWidth = 1024;
-    window.dispatchEvent(new Event('resize'));
-  });
-
   it('renders the Navigation component', () => {
     renderProviders(<Navbar />);
 
@@ -24,18 +20,17 @@ describe('Navbar', () => {
     expect(navLinks.length).toBeGreaterThan(0);
   });
 
-  it('renders login and sign-up buttons when user is not authenticated', () => {
+  it('renders login and sign-up buttons', () => {
     renderProviders(<Navbar />);
 
     const loginButton = screen.getByRole('button', { name: /login/i });
-    const signUpButton = screen.queryByRole('button', { name: /sign up/i });
-
+    const signUpButton = screen.getByRole('button', { name: /sign up/i });
     screen.debug();
 
     console.log('Login Button:', loginButton);
     console.log('Sign Up Button:', signUpButton);
 
     expect(loginButton).toBeInTheDocument();
-    // expect(signUpButton).toBeInTheDocument();
+    expect(signUpButton).toBeInTheDocument();
   });
 });

@@ -70,7 +70,7 @@ const Navbar = () => {
             <Link href='/login'>Login</Link>
           </Button>
           <Button
-            display={{ base: 'none', md: 'inline-flex' }}
+            hideBelow='md'
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
