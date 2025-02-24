@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { renderProviders } from '@/utils/test.utils';
 import Page from '../app/page';
 
-describe('Page', () => {
+describe('Home Page', () => {
   it('renders a heading', () => {
     renderProviders(<Page />);
 

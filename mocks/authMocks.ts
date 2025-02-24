@@ -24,6 +24,7 @@ interface User {
 
 const mockDatabase: User[] = [];
 
+// TODO: Initiailize users
 const initializeMockDatabase = async () => {
   const hashedPassword = await bcrypt.hash('password', SALT_ROUNDS);
   mockDatabase.push({
