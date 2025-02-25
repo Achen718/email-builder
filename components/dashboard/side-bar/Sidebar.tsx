@@ -1,5 +1,11 @@
 'use client';
-import { Drawer, DrawerContent, useDisclosure } from '@chakra-ui/react';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerBody,
+  useDisclosure,
+} from '@chakra-ui/react';
 import SidebarContent from './contents/SidebarContent';
 import MobileNav from './nav/MobileNav';
 
@@ -7,24 +13,21 @@ const Sidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
-      />
+      <MobileNav display={'flex'} onOpen={onOpen} />
       <Drawer
         isOpen={isOpen}
         placement='left'
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size='full'
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <DrawerCloseButton />
+          <DrawerBody p={4}>
+            <SidebarContent />
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
-      <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
     </>
   );
 };

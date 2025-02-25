@@ -1,4 +1,10 @@
-import { Box, Flex, Icon, FlexProps } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Icon,
+  FlexProps,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { IconType } from 'react-icons';
 import NextLink from 'next/link';
 
@@ -24,7 +30,7 @@ const SidebarNavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
         role='group'
         cursor='pointer'
         _hover={{
-          bg: 'cyan.400',
+          bg: useColorModeValue('gray.400', 'gray.900'),
           color: 'white',
         }}
         {...rest}
