@@ -1,14 +1,11 @@
-import Hero from '@/components/Hero';
+import Hero from '@/components/hero/Hero';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/navigation/Navbar';
-import HeroContainer from '@/components/layout/HeroContainer';
 
 const HomePage = () => (
   <>
     <Navbar />
-    <HeroContainer>
-      <Hero />
-    </HeroContainer>
+    <Hero />
     <Footer />
   </>
 );
