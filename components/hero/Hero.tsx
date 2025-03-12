@@ -14,11 +14,18 @@ import {
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
+const featureItems = [
+  { title: 'Visual editor', desc: 'Drag & drop interface' },
+  { title: 'Responsive design', desc: 'Works on all devices' },
+  { title: 'Template library', desc: 'Start with pre-built designs' },
+  { title: 'Analytics', desc: 'Track performance' },
+];
+
 const Hero = () => {
   const MotionBox = motion.create(Box);
-  const bgColor = useColorModeValue('white', '#1E1E1E');
+  const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
-  const highlightColor = useColorModeValue('#7B61FF', '#9F7AEA');
+  const highlightColor = useColorModeValue('purple.500', 'purple.400');
 
   return (
     <Box bg={bgColor} w='full' overflow='hidden'>
@@ -54,13 +61,14 @@ const Hero = () => {
           >
             Build beautiful emails
             <Text as='span' color={highlightColor}>
+              {' '}
               without code
             </Text>
           </Heading>
 
           <Text
             fontSize={{ base: 'lg', md: 'xl' }}
-            color={useColorModeValue('gray.600', 'gray.400')}
+            color={useColorModeValue('gray.600', 'gray.100')}
             maxW='3xl'
             mx='auto'
           >
@@ -80,13 +88,14 @@ const Hero = () => {
               px={8}
               bg={highlightColor}
               color='white'
+              colorScheme='purple'
               _hover={{
-                bg: useColorModeValue('#6952D4', '#8C69E2'),
+                bg: useColorModeValue('purple.700', 'purple.600'),
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
               }}
               _active={{
-                bg: useColorModeValue('#5B46B7', '#7C5DD0'),
+                bg: useColorModeValue('purple.400', 'purple.400'),
               }}
               fontWeight='medium'
               transition='all 0.2s'
@@ -97,11 +106,13 @@ const Hero = () => {
               size='lg'
               rounded='md'
               px={8}
+              colorScheme='gray'
               fontWeight='medium'
               variant='outline'
               _hover={{
-                bg: useColorModeValue('gray.100', 'gray.700'),
+                bg: useColorModeValue('gray.300', 'gray.600'),
                 transform: 'translateY(-2px)',
+                boxShadow: 'lg',
               }}
             >
               See how it works
@@ -137,12 +148,7 @@ const Hero = () => {
 
         {/* Feature bullets */}
         <Flex justify='center' wrap='wrap' mt={16} gap={8}>
-          {[
-            { title: 'Visual editor', desc: 'Drag & drop interface' },
-            { title: 'Responsive design', desc: 'Works on all devices' },
-            { title: 'Template library', desc: 'Start with pre-built designs' },
-            { title: 'Analytics', desc: 'Track performance' },
-          ].map((feature, idx) => (
+          {featureItems.map((feature, idx) => (
             <Box key={idx} textAlign='center' maxW='180px'>
               <Text fontWeight='bold' fontSize='lg' mb={1}>
                 {feature.title}
