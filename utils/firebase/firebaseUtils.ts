@@ -1,6 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  signInWithRedirect,
+  GoogleAuthProvider,
+  User,
+} from 'firebase/auth';
 import { DocumentReference } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -18,32 +24,24 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 const auth = getAuth();
+
+// Google Providers
 const googleProvider = new GoogleAuthProvider();
 
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
 // create user document in firestore
-interface UserAuth {
-  uid: string;
-  displayName: string | null;
-  email: string | null;
-}
-
-export const createUserDoc = async (
-  userAuth: UserAuth
-): Promise<DocumentReference> => {
+export const createUserDoc = async (user: User): Promise<DocumentReference> => {
   // set user document reference
-  const userDocRef = doc(db, 'users', userAuth.uid);
+  const userDocRef = doc(db, 'users', user.uid);
 
-  console.log(userDocRef);
   // get user from firestore
   const userDocSnap = await getDoc(userDocRef);
 
   // if user does not exist, create user document
   if (!userDocSnap.exists()) {
-    console.log(userAuth);
-    const { displayName, email } = userAuth;
+    const { displayName, email } = user;
     const createdAt = new Date();
 
     try {
