@@ -21,6 +21,11 @@ const featureItems = [
   { title: 'Analytics', desc: 'Track performance' },
 ];
 
+const basePath =
+  process.env.NODE_ENV === 'production'
+    ? '/email-builder' // Your repository name
+    : '';
+
 const Hero = () => {
   const MotionBox = motion.create(Box);
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -137,7 +142,7 @@ const Hero = () => {
             p={{ base: 4, md: 8 }}
           >
             <Image
-              src='/dashboard-preview.png'
+              src={`${basePath}/dashboard-preview.png`}
               alt='Email Builder Interface'
               borderRadius='md'
               objectFit='cover'
