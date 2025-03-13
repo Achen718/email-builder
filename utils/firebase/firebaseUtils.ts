@@ -6,17 +6,18 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   User,
 } from 'firebase/auth';
 import { DocumentReference } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCr6z-NKhfkeLGvpU2cYMndxMntBgeaZKQ',
-  authDomain: 'email-builder-db-d4d78.firebaseapp.com',
-  projectId: 'email-builder-db-d4d78',
-  storageBucket: 'email-builder-db-d4d78.firebasestorage.app',
-  messagingSenderId: '870827994059',
-  appId: '1:870827994059:web:10c3a650a0b31f6a46e44e',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -33,6 +34,21 @@ const googleProvider = new GoogleAuthProvider();
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
+// Get Currently signed in user
+export const getCurrentUser = (): Promise<User | null> => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        console.log(unsubscribe);
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};
+
 // Sign up with email and password
 export const createUserWithEmailAndPasswordHandler = async (
   email: string,
@@ -40,6 +56,14 @@ export const createUserWithEmailAndPasswordHandler = async (
 ) => {
   if (!email || !password) return;
   return await createUserWithEmailAndPassword(auth, email, password);
+};
+//  sign in with email and password
+export const signInWithEmailAndPasswordHandler = async (
+  email: string,
+  password: string
+) => {
+  if (!email || !password) return;
+  return await signInWithEmailAndPassword(auth, email, password);
 };
 
 // Firestore start
