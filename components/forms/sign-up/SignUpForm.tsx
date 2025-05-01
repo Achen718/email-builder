@@ -1,15 +1,10 @@
 'use client';
 
-import { Box, HStack, Stack, Link } from '@chakra-ui/react';
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { Box, HStack, Stack, Link, useToast } from '@chakra-ui/react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
-import { userSignUpRequest } from '@/lib/features/auth/authActions';
-import {
-  selectAuthLoading,
-  selectAuthSuccess,
-} from '@/lib/features/auth/authSelectors';
+import { useAuth } from '@/hooks/useAuth';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormButton from '@/components/forms/formButton/FormButton';
@@ -26,32 +21,33 @@ const SignUpForm = () => {
   const { firstName, email, password, confirmPassword } = formFields;
 
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectAuthLoading);
-  const success = useAppSelector(selectAuthSuccess);
+  const toast = useToast();
+
+  const { signUp, isSignUpLoading } = useAuth();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      toast({
+        title: 'Passwords do not match',
+        status: 'error',
+        duration: 3000,
+      });
       return;
     }
 
-    dispatch(userSignUpRequest({ firstName, email, password }));
+    signUp({
+      firstName,
+      email,
+      password,
+    });
   };
-
-  useEffect(() => {
-    if (success) {
-      router.push('/dashboard');
-    }
-  }, [loading]);
 
   return (
     <FormContainer title='Sign up'>
@@ -104,8 +100,12 @@ const SignUpForm = () => {
           onChange={handleChange}
           isRequired
         />
-        <Stack spacing={10} pt={2}>
-          <FormButton buttonText='Sign up' loading={loading} type='submit' />
+        <Stack pt={2}>
+          <FormButton
+            buttonText='Sign up'
+            loading={isSignUpLoading}
+            type='submit'
+          />
         </Stack>
         <Box mt={2}>
           Already have an account?{' '}
