@@ -1,18 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './root-reducer';
-import { rootSaga } from './root-saga';
-
-export const sagaMiddleware = createSagaMiddleware();
+import { firebaseApi } from '@/lib/services/api/firebaseApiSlice';
 
 export const makeStore = () => {
   const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(sagaMiddleware),
+      getDefaultMiddleware().concat(firebaseApi.middleware),
   });
 
-  sagaMiddleware.run(rootSaga);
   return store;
 };
 
