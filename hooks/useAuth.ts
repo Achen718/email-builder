@@ -1,5 +1,4 @@
 import { useAppDispatch } from '@/lib/hooks/hooks';
-import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { setCredentials } from '@/lib/features/auth/authSlice';
 import {
@@ -7,7 +6,7 @@ import {
   useLoginWithEmailMutation,
   useGoogleLoginMutation,
 } from '@/lib/services/api/firebaseApiSlice';
-import { getErrorMessage } from '@/utils/getErrorMessage';
+import { useNotification } from './useNotification';
 
 export interface UserData {
   uid: string;
@@ -24,8 +23,8 @@ export interface AuthResult {
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
-  const toast = useToast();
   const router = useRouter();
+  const { showSuccess, showError } = useNotification();
 
   const [loginWithEmail, { isLoading: isLoginLoading }] =
     useLoginWithEmailMutation();
@@ -51,23 +50,15 @@ export const useAuth = () => {
         })
       );
 
-      toast({
-        title: successTitle,
-        status: 'success',
-        duration: 3000,
-      });
+      showSuccess(successTitle);
+
       const searchParams = new URLSearchParams(window.location.search);
       const redirectPath = searchParams.get('redirect') || '/dashboard';
       router.push(redirectPath);
 
       return true;
     } catch (error) {
-      toast({
-        title: errorTitle,
-        description: getErrorMessage(error),
-        status: 'error',
-        duration: 5000,
-      });
+      showError(errorTitle, error);
       return false;
     }
   };
