@@ -83,6 +83,7 @@ export const {
   useCreateUserDocumentMutation,
   useLoginWithEmailMutation,
   useSignUpWithEmailMutation,
+  useGoogleLoginMutation,
   useGetCurrentUserQuery,
   useLogoutUserMutation,
 } = firebaseApi;

@@ -5,6 +5,7 @@ import { setCredentials } from '@/lib/features/auth/authSlice';
 import {
   useSignUpWithEmailMutation,
   useLoginWithEmailMutation,
+  useGoogleLoginMutation,
 } from '@/lib/services/api/firebaseApiSlice';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 
@@ -30,6 +31,8 @@ export const useAuth = () => {
     useLoginWithEmailMutation();
   const [signUpWithEmail, { isLoading: isSignUpLoading }] =
     useSignUpWithEmailMutation();
+  const [googleLogin, { isLoading: isGoogleLoading }] =
+    useGoogleLoginMutation();
 
   const handleAuthentication = async <T>(
     authAction: Promise<T>,
@@ -89,10 +92,20 @@ export const useAuth = () => {
     );
   };
 
+  const signInWithGoogle = async () => {
+    return handleAuthentication(
+      googleLogin({}).unwrap(),
+      'Signed in with Google successfully',
+      'Google sign-in failed'
+    );
+  };
+
   return {
     signUp,
     login,
+    signInWithGoogle,
     isSignUpLoading,
     isLoginLoading,
+    isGoogleLoading,
   };
 };
