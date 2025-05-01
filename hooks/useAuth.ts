@@ -53,8 +53,10 @@ export const useAuth = () => {
         status: 'success',
         duration: 3000,
       });
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectPath = searchParams.get('redirect') || '/dashboard';
+      router.push(redirectPath);
 
-      router.push('/dashboard');
       return true;
     } catch (error) {
       toast({
