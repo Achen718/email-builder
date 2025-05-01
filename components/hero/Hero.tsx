@@ -137,7 +137,7 @@ const Hero = () => {
             p={{ base: 4, md: 8 }}
           >
             <Image
-              src={`/dashboard-preview.png`}
+              src='/home/dashboard-preview.png'
               alt='Email Builder Interface'
               borderRadius='md'
               objectFit='cover'
