@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormButton from '@/components/forms/formButton/FormButton';
+import GoogleSignInButton from '../GoogleSignInButton';
 
 const defaultFormFields = {
   firstName: '',
@@ -106,6 +107,7 @@ const SignUpForm = () => {
             loading={isSignUpLoading}
             type='submit'
           />
+          <GoogleSignInButton />
         </Stack>
         <Box mt={2}>
           Already have an account?{' '}

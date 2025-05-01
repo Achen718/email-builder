@@ -1,15 +1,12 @@
 'use client';
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { Box, Stack, Link, useToast } from '@chakra-ui/react';
+import { Box, Stack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { useAppDispatch } from '@/lib/hooks/hooks';
-import { setCredentials } from '@/lib/features/auth/authSlice'; // Import this from your auth slice
-import { useLoginWithEmailMutation } from '@/lib/services/api/firebaseApiSlice'; // Import RTK Query hook
 import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormButton from '@/components/forms/formButton/FormButton';
+import GoogleSignInButton from '@/components/forms/GoogleSignInButton';
 
 const defaultFormFields = {
   email: '',
@@ -52,12 +49,13 @@ const LoginForm = () => {
           onChange={handleChange}
           isRequired
         />
-        <Stack spacing={10} pt={2}>
+        <Stack pt={2}>
           <FormButton
             buttonText='Login'
             loading={isLoginLoading}
             type='submit'
           />
+          <GoogleSignInButton />
         </Stack>
         <Box mt={2}>
           <Link as={NextLink} href='/' color={'blue.400'} fontSize={'sm'}>
