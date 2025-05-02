@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { authReducer } from '@/lib/features/auth/authSlice';
-import { firebaseApi } from '@/lib/services/api/firebaseApiSlice';
+import { authReducer } from '@/lib/features/auth/auth-slice';
+import { firebaseApi } from '@/lib/features/auth/auth-api';
 
 export const rootReducer = combineReducers({
   auth: authReducer,

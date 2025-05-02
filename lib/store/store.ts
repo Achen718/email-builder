@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { rootReducer } from './root-reducer';
-import { firebaseApi } from '@/lib/services/api/firebaseApiSlice';
+import { firebaseApi } from '@/lib/features/auth/auth-api';
 
 export const makeStore = () => {
   const store = configureStore({
