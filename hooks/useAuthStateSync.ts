@@ -1,12 +1,12 @@
 'use client';
 import { useEffect } from 'react';
 import { useAppDispatch } from '@/lib/hooks/hooks';
-import { auth } from '@/utils/firebase/firebaseUtils';
+import { auth } from '@/lib/firebase/client-app';
 import { onAuthStateChanged } from 'firebase/auth';
 import {
   setCredentials,
   clearCredentials,
-} from '@/lib/features/auth/authSlice';
+} from '@/lib/features/auth/auth-slice';
 
 export function useAuthStateSync() {
   const dispatch = useAppDispatch();

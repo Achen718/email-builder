@@ -1,11 +1,11 @@
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import { useRouter } from 'next/navigation';
-import { setCredentials } from '@/lib/features/auth/authSlice';
+import { setCredentials } from '@/lib/features/auth/auth-slice';
 import {
   useSignUpWithEmailMutation,
   useLoginWithEmailMutation,
   useGoogleLoginMutation,
-} from '@/lib/services/api/firebaseApiSlice';
+} from '@/lib/features/auth/auth-api';
 import { useNotification } from './useNotification';
 
 export interface UserData {
