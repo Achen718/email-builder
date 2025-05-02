@@ -26,7 +26,7 @@ const navItems = [
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode(); // Add this line
-  const bg = useColorModeValue('white', '#0d0d0d');
+  const bg = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const buttonBgColor = useColorModeValue('purple.500', 'purple.400');
   const buttonHoverBg = useColorModeValue('purple.700', 'purple.300');
@@ -38,7 +38,7 @@ const Navbar = () => {
       position='sticky'
       top={0}
       zIndex={100}
-      // bg={bg}
+      bg={bg}
       borderBottom={1}
       borderStyle={'solid'}
       borderColor={menuBorderColor}
