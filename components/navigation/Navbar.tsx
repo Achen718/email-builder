@@ -118,7 +118,7 @@ const Navbar = () => {
 
             <Link href='/login'>
               <Button variant='ghost' fontWeight='medium' size='md'>
-                Log in
+                Login
               </Button>
             </Link>
             <Link href='/sign-up'>
@@ -178,7 +178,7 @@ const Navbar = () => {
                     my={2}
                     width='calc(100% - 32px)'
                   >
-                    Log in
+                    Login
                   </Button>
                 </Link>
                 <Link href='/sign-up'>
