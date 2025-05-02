@@ -17,10 +17,10 @@ import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 // Define navigation links
 const navItems = [
-  { label: 'Templates', href: '/templates' },
+  { label: 'Products', href: '/products' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Enterprise', href: '/enterprise' },
-  { label: 'Community', href: '/community' },
+  { label: 'Customers', href: '/customers' },
 ];
 
 const Navbar = () => {
@@ -38,7 +38,7 @@ const Navbar = () => {
       position='sticky'
       top={0}
       zIndex={100}
-      bg={bg}
+      // bg={bg}
       borderBottom={1}
       borderStyle={'solid'}
       borderColor={menuBorderColor}
