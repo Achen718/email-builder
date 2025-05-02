@@ -1,6 +1,7 @@
 import {
   FiHome,
-  FiTrendingUp,
+  FiLayout,
+  FiFigma,
   FiCompass,
   FiStar,
   FiSettings,
@@ -17,7 +18,8 @@ interface LinkItemProps {
 // TODO: Move external
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome, href: '/dashboard' },
-  { name: 'Templates', icon: FiTrendingUp, href: '/dashboard/templates' },
+  { name: 'Templates', icon: FiLayout, href: '/dashboard/templates' },
+  { name: 'Designs', icon: FiFigma, href: '/dashboard/designs' },
   { name: 'Explore', icon: FiCompass, href: '/dashboard' },
   { name: 'Favourites', icon: FiStar, href: '/dashboard' },
   { name: 'Settings', icon: FiSettings, href: '/dashboard/settings' },
