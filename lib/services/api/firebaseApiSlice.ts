@@ -6,6 +6,8 @@ export const firebaseApi = createApi({
   reducerPath: 'firebaseApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '/',
+    // fix jest warning: ReferenceError: fetch is not defined
+    fetchFn: typeof window !== 'undefined' ? undefined : global.fetch,
     prepareHeaders: (headers, { getState }) => {
       // Get token from state
       const token = (getState() as RootState).auth?.userToken;
