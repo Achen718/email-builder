@@ -29,6 +29,13 @@ export const firebaseApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    createSession: build.mutation({
+      query: ({ idToken }) => ({
+        url: '/api/auth/session',
+        method: 'POST',
+        body: { idToken },
+      }),
+    }),
     // client first approach
     googleLogin: build.mutation({
       async queryFn(_, { dispatch }) {
@@ -93,6 +100,7 @@ export const firebaseApi = createApi({
 
 export const {
   useCreateUserDocumentMutation,
+  useCreateSessionMutation,
   useLoginWithEmailMutation,
   useSignUpWithEmailMutation,
   useGoogleLoginMutation,

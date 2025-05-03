@@ -6,6 +6,7 @@ import {
   useLoginWithEmailMutation,
   useGoogleLoginMutation,
 } from '@/lib/features/auth/auth-api';
+import { useAppSelector } from '@/lib/hooks/hooks';
 import { useNotification } from './useNotification';
 
 export interface UserData {
@@ -91,7 +92,11 @@ export const useAuth = () => {
     );
   };
 
+  const { currentUser, userToken } = useAppSelector((state) => state.auth);
+
   return {
+    currentUser,
+    userToken,
     signUp,
     login,
     signInWithGoogle,

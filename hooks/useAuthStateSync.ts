@@ -7,9 +7,11 @@ import {
   setCredentials,
   clearCredentials,
 } from '@/lib/features/auth/auth-slice';
+import { useCreateSessionMutation } from '@/lib/features/auth/auth-api';
 
 export function useAuthStateSync() {
   const dispatch = useAppDispatch();
+  const [createSession] = useCreateSessionMutation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -18,15 +20,7 @@ export function useAuthStateSync() {
           // Get token for API auth
           const idToken = await user.getIdToken();
 
-          // Call your API to verify the token and create a session
-          await fetch('/api/auth/session', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idToken }),
-          });
-
+          await createSession({ idToken }).unwrap();
           // Update Redux store
           dispatch(
             setCredentials({
@@ -48,7 +42,6 @@ export function useAuthStateSync() {
         dispatch(clearCredentials());
       }
     });
-
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, createSession]);
 }
