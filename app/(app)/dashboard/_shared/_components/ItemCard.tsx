@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Template } from '@/types/templates';
 import { Design } from '@/types/designs';
+import { formatDate } from '@/utils/formatDate';
 
 type ItemCardProps = {
   item: Template | Design;
@@ -36,7 +37,7 @@ export default function ItemCard({ item, type }: ItemCardProps) {
 
         <div className='flex justify-between items-center'>
           <span className='text-xs text-muted-foreground'>
-            {new Date(item.createdAt).toLocaleDateString()}
+            {formatDate(item.createdAt)}
           </span>
 
           <Link
