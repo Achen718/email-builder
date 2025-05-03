@@ -12,6 +12,8 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client-app';
 import { Design } from '@/types/designs';
+import { EmailDesign } from '@/types/templates';
+import { isEmailDesign } from '@/utils/validateEmailDesign';
 
 export const createDesign = async (
   designData: Partial<Design>
@@ -30,14 +32,17 @@ export const createDesign = async (
 };
 
 // Save or update a design
-export const saveTemplateDesign = async (
-  templateId: string,
-  design: any,
+export const saveDesignContent = async (
+  designId: string,
+  design: EmailDesign,
   metadata: Partial<Design> = {}
 ): Promise<void> => {
-  const templateRef = doc(db, 'designs', templateId);
+  if (!isEmailDesign(design)) {
+    throw new Error('Invalid email design structure');
+  }
 
-  await updateDoc(templateRef, {
+  const designRef = doc(db, 'designs', designId);
+  await updateDoc(designRef, {
     design,
     updatedAt: serverTimestamp(),
     ...metadata,
@@ -59,9 +64,16 @@ export const getUserDesigns = async (userId: string): Promise<Design[]> => {
 export const getDesignById = async (
   designId: string
 ): Promise<Design | null> => {
-  const designRef = doc(db, 'desgisn', designId);
+  const designRef = doc(db, 'designs', designId);
   const snapshot = await getDoc(designRef);
 
   if (!snapshot.exists()) return null;
-  return { ...snapshot.data() } as Design;
+
+  const data = snapshot.data();
+  if (!isEmailDesign(data.design)) {
+    console.error('Invalid design structure from Firestore');
+    return null;
+  }
+
+  return { ...data } as Design;
 };

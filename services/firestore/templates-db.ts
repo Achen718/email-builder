@@ -10,7 +10,8 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client-app';
-import { Template } from '@/types/templates';
+import { Template, EmailDesign } from '@/types/templates';
+import { isEmailDesign } from '@/utils/validateEmailDesign';
 
 // Create a new template
 export const createTemplate = async (
@@ -32,9 +33,13 @@ export const createTemplate = async (
 // Save or update a template design
 export const saveTemplateDesign = async (
   templateId: string,
-  design: any,
+  design: EmailDesign,
   metadata: Partial<Template> = {}
 ): Promise<void> => {
+  if (!isEmailDesign(design)) {
+    throw new Error('Invalid email design structure');
+  }
+
   const templateRef = doc(db, 'templates', templateId);
 
   await updateDoc(templateRef, {
@@ -63,5 +68,13 @@ export const getTemplateById = async (
   const snapshot = await getDoc(templateRef);
 
   if (!snapshot.exists()) return null;
-  return { ...snapshot.data() } as Template;
+
+  const data = snapshot.data();
+
+  if (!isEmailDesign(data.design)) {
+    console.error('Invalid design structure from Firestore');
+    return null;
+  }
+
+  return { ...data } as Template;
 };
