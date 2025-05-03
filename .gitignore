@@ -33,6 +33,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
