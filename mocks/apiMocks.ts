@@ -1,6 +1,5 @@
-// @ts-ignore
 import { Template, EmailDesign } from '../types/templates';
-import { Design } from '../types/designs'; // Adjust the import path as necessary
+import { Design } from '@/types/designs';
 import mockDesign from './designs/mockDesign.json' assert { type: 'json' };
 import emailDesignMock from './designs/emailDesignMock.json' assert { type: 'json' };
 
@@ -68,7 +67,7 @@ export const fetchMockDesigns = async (templateId: string): Promise<any> => {
 
 export const saveMockDesign = async (
   templateId: string,
-  design: any
+  design: EmailDesign
 ): Promise<void> => {
   return new Promise((resolve) => {
     setTimeout(() => {

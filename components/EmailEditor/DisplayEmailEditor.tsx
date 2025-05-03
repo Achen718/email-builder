@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
-import { fetchMockDesign, saveMockDesign } from '@/mocks/apiMocks';
+import { fetchMockDesigns, saveMockDesign } from '@/mocks/apiMocks';
 import EmailEditorHeading from './EmailEditorHeader';
 
 interface DisplayEmailEditorProps {
@@ -92,7 +92,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     console.log('onLoad', unlayer);
     unlayer.addEventListener('design:loaded', onDesignLoad);
     unlayer.addEventListener('design:updated', onDesignUpdate);
-    const design = await fetchMockDesign(templateId);
+    const design = await fetchMockDesigns(templateId);
     unlayer.loadDesign(design);
 
     return () => {
