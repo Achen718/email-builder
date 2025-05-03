@@ -31,10 +31,20 @@ export const firebaseApi = createApi({
     }),
     // client first approach
     googleLogin: build.mutation({
-      queryFn: async () => {
+      async queryFn(_, { dispatch }) {
         try {
-          const result = await googleSignIn();
-          return { data: result };
+          // 1. Get user from Firebase
+          const authResult = await googleSignIn();
+
+          // 2. Create user document using existing mutation
+          const result = await dispatch(
+            firebaseApi.endpoints.createUserDocument.initiate({
+              idToken: authResult.userToken,
+            })
+          ).unwrap();
+
+          // 3. Return complete result
+          return { data: authResult };
         } catch (error) {
           return {
             error: {

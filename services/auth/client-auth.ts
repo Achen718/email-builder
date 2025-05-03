@@ -52,10 +52,20 @@ export const processUserAuthentication = async (
 };
 
 // Google authentication utility
-export const googleSignIn = async (): Promise<AuthResult> => {
+export const googleSignIn = async () => {
   try {
     const { user } = await signInWithGooglePopup();
-    return processUserAuthentication(user);
+    // Just return user info and token, don't call API
+    const idToken = await user.getIdToken();
+
+    return {
+      user: {
+        email: user.email,
+        displayName: user.displayName,
+        uid: user.uid,
+      },
+      userToken: idToken,
+    };
   } catch (error) {
     console.error('Google sign-in failed:', error);
     throw error;
