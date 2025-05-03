@@ -1,15 +1,21 @@
 // @ts-ignore
-import { Template } from '../types/templates';
+import { Template, EmailDesign } from '../types/templates';
+import { Design } from '../types/designs'; // Adjust the import path as necessary
 import emailDesignMock from './designs/emailDesignMock.json'; // Import your large JSON object
 import mockDesign from './designs/mockDesign.json'; // Import your large JSON object
 
-const mockTemplates: Template[] = [
+type MockTemplate = Omit<Template, 'design'> & {
+  design: any; // Less strict for mock data
+};
+
+const mockTemplates: MockTemplate[] = [
   {
     id: '1',
     name: 'Sample Template 1',
     design: mockDesign,
     displayMode: 'Mode 1',
     updatedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
   },
   {
     id: '2',
@@ -17,42 +23,7 @@ const mockTemplates: Template[] = [
     name: 'Template 2',
     displayMode: 'Mode 2',
     updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    name: 'Template 3',
-    displayMode: 'Mode 3',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    name: 'Template 4 Template 4',
-    displayMode: 'Mode 4',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    name: 'Template 5',
-    displayMode: 'Mode 5',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    name: 'Template 6',
-    displayMode: 'Mode 6',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '7',
-    name: 'Template 7',
-    displayMode: 'Mode 7',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '8',
-    name: 'Template 8',
-    displayMode: 'Mode 8',
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
   },
   // Add more mock templates as needed
 ];
@@ -65,7 +36,29 @@ export const fetchMockTemplates = (): Promise<Template[]> => {
   });
 };
 
-export const fetchMockDesign = async (templateId: string): Promise<any> => {
+export const fetchMockDesignsList = async (): Promise<Design[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Create mock designs based on templates
+      const mockDesigns = mockTemplates.map((template) => ({
+        id: `design_${template.id}`,
+        name: `Design from ${template.name}`,
+        description: `Design created from ${template.name}`,
+        thumbnail: '',
+        templateId: template.id,
+        userId: 'mock-user-id',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        design: template.design,
+        status: 'draft' as const,
+      }));
+
+      resolve(mockDesigns);
+    }, 500);
+  });
+};
+
+export const fetchMockDesigns = async (templateId: string): Promise<any> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const template = mockTemplates.find((t) => t.id === templateId);
