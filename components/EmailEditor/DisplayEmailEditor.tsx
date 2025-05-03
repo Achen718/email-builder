@@ -2,6 +2,8 @@
 'use client';
 import { useRef, useState } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
+import { uploadImageToS3 } from '@/services/storage/image-storage';
+import { useAuth } from '@/hooks/useAuth';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import { fetchMockDesigns, saveMockDesign } from '@/mocks/apiMocks';
@@ -15,6 +17,55 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const emailEditorRef = useRef<EditorRef>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const { currentUser } = useAuth();
+
+  const handleImageUpload = async (
+    file: File,
+    onSuccess: (data: any) => void
+  ) => {
+    try {
+      if (!currentUser?.uid) {
+        throw new Error('User not authenticated');
+      }
+
+      // Get image dimensions
+      const dimensions = await getImageDimensions(file);
+
+      // Upload to S3
+      const uploadedImage = await uploadImageToS3(file, currentUser.uid, {
+        width: dimensions.width,
+        height: dimensions.height,
+        contentType: file.type,
+        fileName: file.name,
+      });
+
+      // Return data in format expected by Unlayer editor
+      onSuccess({
+        url: uploadedImage.url,
+        width: uploadedImage.width,
+        height: uploadedImage.height,
+      });
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      // Handle error
+    }
+  };
+
+  const getImageDimensions = (
+    file: File
+  ): Promise<{ width: number; height: number }> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(img.src);
+        resolve({
+          width: img.width,
+          height: img.height,
+        });
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  };
 
   // commit templates in redux
   const exportHtml = () => {
@@ -127,7 +178,12 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
           </Button>
         </ButtonGroup>
       </EmailEditorHeading>
-      <EmailEditor ref={emailEditorRef} onReady={onReady} onLoad={onLoad} />
+      <EmailEditor
+        options={{ tools: { image: { onUpload: handleImageUpload } } }}
+        ref={emailEditorRef}
+        onReady={onReady}
+        onLoad={onLoad}
+      />
     </>
   );
 };
