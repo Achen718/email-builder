@@ -13,10 +13,18 @@ export function useItems(type: 'templates' | 'designs') {
   const [items, setItems] = useState<Template[] | Design[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const { currentUser } = useAuth();
+  const { currentUser, authLoading } = useAuth();
 
   useEffect(() => {
     const fetchItems = async () => {
+      if (authLoading) return;
+
+      if (!currentUser) {
+        setError(new Error('User not authenticated'));
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
 
@@ -48,7 +56,7 @@ export function useItems(type: 'templates' | 'designs') {
     };
 
     fetchItems();
-  }, [type, currentUser]);
+  }, [type, currentUser, authLoading]);
 
   return { items, loading, error };
 }

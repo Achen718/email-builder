@@ -1,10 +1,14 @@
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import { useRouter } from 'next/navigation';
-import { setCredentials } from '@/lib/features/auth/auth-slice';
+import {
+  setCredentials,
+  clearCredentials,
+} from '@/lib/features/auth/auth-slice';
 import {
   useSignUpWithEmailMutation,
   useLoginWithEmailMutation,
   useGoogleLoginMutation,
+  useLogoutUserMutation,
 } from '@/lib/features/auth/auth-api';
 import { useAppSelector } from '@/lib/hooks/hooks';
 import { useNotification } from './useNotification';
@@ -25,6 +29,10 @@ export interface AuthResult {
 export const useAuth = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { currentUser, userToken, authLoading } = useAppSelector(
+    (state) => state.auth
+  );
+
   const { showSuccess, showError } = useNotification();
 
   const [loginWithEmail, { isLoading: isLoginLoading }] =
@@ -33,6 +41,7 @@ export const useAuth = () => {
     useSignUpWithEmailMutation();
   const [googleLogin, { isLoading: isGoogleLoading }] =
     useGoogleLoginMutation();
+  const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
 
   const handleAuthentication = async <T>(
     authAction: Promise<T>,
@@ -92,16 +101,30 @@ export const useAuth = () => {
     );
   };
 
-  const { currentUser, userToken } = useAppSelector((state) => state.auth);
+  const logout = async () => {
+    try {
+      await logoutUser({}).unwrap();
+      dispatch(clearCredentials());
+      showSuccess('Logged out successfully');
+      router.push('/');
+      return true;
+    } catch (error) {
+      showError('Logout failed', error);
+      return false;
+    }
+  };
 
   return {
     currentUser,
     userToken,
+    authLoading,
     signUp,
     login,
+    logout,
     signInWithGoogle,
     isSignUpLoading,
     isLoginLoading,
     isGoogleLoading,
+    isLogoutLoading,
   };
 };

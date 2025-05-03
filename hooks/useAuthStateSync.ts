@@ -1,11 +1,12 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import { auth } from '@/lib/firebase/client-app';
 import { onAuthStateChanged } from 'firebase/auth';
 import {
   setCredentials,
   clearCredentials,
+  setAuthLoading,
 } from '@/lib/features/auth/auth-slice';
 import { useCreateSessionMutation } from '@/lib/features/auth/auth-api';
 
@@ -14,6 +15,8 @@ export function useAuthStateSync() {
   const [createSession] = useCreateSessionMutation();
 
   useEffect(() => {
+    dispatch(setAuthLoading(true));
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
@@ -21,7 +24,7 @@ export function useAuthStateSync() {
           const idToken = await user.getIdToken();
 
           await createSession({ idToken }).unwrap();
-          // Update Redux store
+
           dispatch(
             setCredentials({
               user: {
