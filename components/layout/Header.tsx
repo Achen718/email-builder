@@ -1,12 +1,9 @@
-'use client';
-import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks/hooks';
+import { useAppSelector } from '@/lib/hooks/hooks';
 
 const Header = () => {
-  const dispatch = useAppDispatch();
-  const { currentUser, loading } = useAppSelector((state) => state.auth);
+  const { currentUser, authLoading } = useAppSelector((state) => state.auth);
 
-  console.log(currentUser, loading);
+  console.log(currentUser, authLoading);
 
   return <header>Some header</header>;
 };
