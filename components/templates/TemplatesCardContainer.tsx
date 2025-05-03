@@ -1,7 +1,11 @@
 'use client';
 import { Grid } from '@chakra-ui/react';
 import TemplatesCard from './TemplatesCard';
-import { TemplatesCardContainerProps } from '@/types/templates';
+import { Template } from '@/types/templates';
+
+interface TemplatesCardContainerProps {
+  templates: Template[];
+}
 
 const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
   return (
@@ -12,15 +16,19 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
       p={4}
     >
       {templates &&
-        templates.map(({ id, name, displayMode, updatedAt }) => (
-          <TemplatesCard
-            key={id}
-            name={name}
-            displayMode={displayMode}
-            id={id}
-            updatedAt={updatedAt}
-          />
-        ))}
+        templates.map(
+          ({ id, name, displayMode, updatedAt, createdAt, design }) => (
+            <TemplatesCard
+              key={id}
+              name={name}
+              displayMode={displayMode}
+              id={id}
+              updatedAt={updatedAt}
+              createdAt={createdAt}
+              design={design}
+            />
+          )
+        )}
     </Grid>
   );
 };
