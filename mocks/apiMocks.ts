@@ -1,25 +1,24 @@
 // @ts-ignore
 import { Template, EmailDesign } from '../types/templates';
 import { Design } from '../types/designs'; // Adjust the import path as necessary
-import emailDesignMock from './designs/emailDesignMock.json'; // Import your large JSON object
-import mockDesign from './designs/mockDesign.json'; // Import your large JSON object
+import mockDesign from './designs/mockDesign.json' assert { type: 'json' };
+import emailDesignMock from './designs/emailDesignMock.json' assert { type: 'json' };
 
-type MockTemplate = Omit<Template, 'design'> & {
-  design: any; // Less strict for mock data
-};
+const typedMockDesign = mockDesign as unknown as EmailDesign;
+const typedEmailDesignMock = emailDesignMock as unknown as EmailDesign;
 
-const mockTemplates: MockTemplate[] = [
+const mockTemplates: Template[] = [
   {
     id: '1',
     name: 'Sample Template 1',
-    design: mockDesign,
+    design: typedMockDesign,
     displayMode: 'Mode 1',
     updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
   },
   {
     id: '2',
-    design: emailDesignMock,
+    design: typedEmailDesignMock,
     name: 'Template 2',
     displayMode: 'Mode 2',
     updatedAt: new Date().toISOString(),
