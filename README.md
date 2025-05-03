@@ -3,7 +3,7 @@
 Email Builder is a web application built with Next.js that allows users to create and manage email templates. The application provides a user-friendly interface for designing emails, managing user authentication, and storing email templates.
 
 ## ⚡️ Try it
-[Demo](https://achen718.github.io/email-builder)
+[Demo](https://email-builder-bice-pi.vercel.app/)
 
 ## Features
 
