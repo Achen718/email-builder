@@ -1,25 +1,16 @@
 'use client';
-import { useEffect, useState } from 'react';
-import TemplatesCardContainer from 'components/templates/TemplatesCardContainer';
-import { fetchMockTemplates } from '@/mocks/apiMocks';
-import { Template } from '@/types/templates';
+import { useItems } from '@hooks';
+import { ItemsCardContainer } from '@shared/_components';
 
 const TemplatesPage = () => {
-  const [templates, setTemplates] = useState<Template[]>([]);
+  const { items: templates, loading, error } = useItems('templates');
 
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      const data = await fetchMockTemplates();
-      setTemplates(data);
-    };
-
-    fetchTemplates();
-  }, []);
+  if (loading) return <div>Loading templates...</div>;
+  if (error) return <div>Error loading templates: {error.message}</div>;
 
   return (
     <section className='templates-home-container'>
-      {/* wrap protected routes */}
-      <TemplatesCardContainer templates={templates} />
+      <ItemsCardContainer items={templates} type='templates' />
     </section>
   );
 };

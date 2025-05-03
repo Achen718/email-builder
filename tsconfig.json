@@ -20,6 +20,9 @@
     ],
     "paths": {
       "@/*": ["./*"],
+      "@dashboard/*": ["./app/(app)/dashboard/*"],
+      "@hooks": ["./app/(app)/dashboard/_hooks"],
+      "@shared/_components": ["./app/(app)/dashboard/_shared/_components"],
       "@/components/*": ["components/*"]
     }
   },
