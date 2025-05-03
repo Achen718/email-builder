@@ -6,7 +6,6 @@ import { EmailDesign } from '@/types/templates';
 export function isEmailDesign(obj: unknown): obj is EmailDesign {
   if (!obj || typeof obj !== 'object') return false;
 
-  // Use a more specific type than 'any'
   const design = obj as Record<string, unknown>;
 
   return (
