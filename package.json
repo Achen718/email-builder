@@ -9,7 +9,8 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "distribute-templates": "ts-node features/templates/services/user-templates.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.802.0",
