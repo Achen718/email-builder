@@ -3,13 +3,13 @@ import { adminAuth } from '@/lib/firebase/admin-app';
 
 export async function POST(request: Request) {
   try {
-    const { firstName, email, password } = await request.json();
+    const { displayName, email, password } = await request.json();
 
     // Create the user with Firebase Admin SDK
     const userRecord = await adminAuth.createUser({
       email,
       password,
-      displayName: firstName,
+      displayName,
     });
 
     // Generate a custom token for this user

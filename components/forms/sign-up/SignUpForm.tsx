@@ -11,7 +11,7 @@ import FormButton from '@/components/forms/formButton/FormButton';
 import GoogleSignInButton from '../GoogleSignInButton';
 
 const defaultFormFields = {
-  firstName: '',
+  displayName: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -19,7 +19,7 @@ const defaultFormFields = {
 
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { firstName, email, password, confirmPassword } = formFields;
+  const { displayName, email, password, confirmPassword } = formFields;
 
   const router = useRouter();
   const toast = useToast();
@@ -44,7 +44,7 @@ const SignUpForm = () => {
     }
 
     signUp({
-      firstName,
+      displayName,
       email,
       password,
     });
@@ -56,11 +56,11 @@ const SignUpForm = () => {
         <HStack>
           <Box>
             <FormInput
-              id='firstName'
+              id='displayName'
               label='First Name'
               type='text'
-              name='firstName'
-              value={firstName}
+              name='displayName'
+              value={displayName}
               onChange={handleChange}
               isRequired
             />

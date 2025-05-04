@@ -74,10 +74,10 @@ export const firebaseApi = createApi({
     }),
 
     signUpWithEmail: build.mutation({
-      query: ({ firstName, email, password }) => ({
+      query: ({ displayName, email, password }) => ({
         url: '/api/auth/sign-up',
         method: 'POST',
-        body: { firstName, email, password },
+        body: { displayName, email, password },
       }),
       invalidatesTags: ['User'],
     }),
