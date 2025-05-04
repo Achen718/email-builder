@@ -1,17 +1,14 @@
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import { useRouter } from 'next/navigation';
-import {
-  setCredentials,
-  clearCredentials,
-} from '@/lib/features/auth/auth-slice';
+import { setCredentials, clearCredentials } from '@/features/auth/auth-slice';
 import {
   useSignUpWithEmailMutation,
   useLoginWithEmailMutation,
   useGoogleLoginMutation,
   useLogoutUserMutation,
-} from '@/lib/features/auth/auth-api';
+} from '@/features/auth/auth-api';
 import { useAppSelector } from '@/lib/hooks/hooks';
-import { useNotification } from './useNotification';
+import { useNotification } from '../../../hooks/useNotification';
 
 export interface UserData {
   uid: string;

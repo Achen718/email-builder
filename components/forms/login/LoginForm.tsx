@@ -2,7 +2,7 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { Box, Stack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormButton from '@/components/forms/formButton/FormButton';

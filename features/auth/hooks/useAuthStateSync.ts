@@ -7,8 +7,8 @@ import {
   setCredentials,
   clearCredentials,
   setAuthLoading,
-} from '@/lib/features/auth/auth-slice';
-import { useCreateSessionMutation } from '@/lib/features/auth/auth-api';
+} from '@/features/auth/auth-slice';
+import { useCreateSessionMutation } from '@/features/auth/auth-api';
 
 export function useAuthStateSync() {
   const dispatch = useAppDispatch();

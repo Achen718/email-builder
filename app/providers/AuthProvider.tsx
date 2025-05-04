@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode } from 'react';
-import { useAuthStateSync } from '@/hooks/useAuthStateSync';
+import { useAuthStateSync } from '@/features/auth/hooks/useAuthStateSync';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   useAuthStateSync(); // Sets up the auth state listener

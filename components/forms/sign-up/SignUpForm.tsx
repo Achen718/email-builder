@@ -4,7 +4,7 @@ import { Box, HStack, Stack, Link, useToast } from '@chakra-ui/react';
 import { useState, ChangeEvent, FormEvent } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormContainer from '@/components/forms/formContainer/FormContainer';
 import FormButton from '@/components/forms/formButton/FormButton';

@@ -2,7 +2,7 @@
 
 import { Button, Icon, Text } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 const GoogleSignInButton = () => {
   const { signInWithGoogle, isGoogleLoading } = useAuth();

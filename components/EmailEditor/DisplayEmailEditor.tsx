@@ -4,7 +4,7 @@ import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 import { uploadImageToS3 } from '@/services/storage/image-storage';
 import { debounce } from 'lodash';
 import { EmailDesign } from '@/types/templates';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import { fetchMockDesigns, saveMockDesign } from '@/mocks/apiMocks';

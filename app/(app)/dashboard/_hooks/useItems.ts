@@ -4,7 +4,7 @@ import { getUserTemplates } from '@/services/firestore/templates-db';
 import { getUserDesigns } from '@/services/firestore/designs-db';
 import { Template } from '@/types/templates';
 import { Design } from '@/types/designs';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 // Set to true to use mock data for development/testing
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === 'true';
