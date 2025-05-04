@@ -1,19 +1,18 @@
-import DisplayEmailEditor from '@/components/EmailEditor/DisplayEmailEditor';
+'use client';
 
-import { fetchMockTemplates } from '@/mocks/apiMocks';
-import { Template } from '@/types/templates';
-interface Params {
-  id: string;
-}
+import dynamic from 'next/dynamic';
+import { useParams } from 'next/navigation';
 
-const TemplatesIdPage = ({ params }: { params: Params }) => {
-  const templateId = params.id;
+const DisplayEmailEditor = dynamic(
+  () => import('@/components/EmailEditor/DisplayEmailEditor'),
+  { ssr: false }
+);
 
-  return (
-    <>
-      <DisplayEmailEditor templateId={templateId} />
-    </>
-  );
+const TemplatesIdPage = () => {
+  const params = useParams();
+  const templateId = params.id as string;
+
+  return <DisplayEmailEditor templateId={templateId} />;
 };
 
 export default TemplatesIdPage;

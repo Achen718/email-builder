@@ -1,8 +1,9 @@
-// @ts-nocheck
 'use client';
-import { useRef, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 import { uploadImageToS3 } from '@/services/storage/image-storage';
+import { debounce } from 'lodash';
+import { EmailDesign } from '@/types/templates';
 import { useAuth } from '@/hooks/useAuth';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
@@ -13,15 +14,71 @@ interface DisplayEmailEditorProps {
   templateId: string;
 }
 
+interface User {
+  uid: string;
+}
+
+interface UnlayerDesignUpdateEvent {
+  type: string;
+  item: unknown;
+  changes: unknown;
+}
+
+interface DesignLoadData {
+  design: {
+    idCounters: Record<string, number>;
+    usageCounters: Record<string, number>;
+    contents: Record<string, unknown>;
+    columns: Record<string, unknown>;
+    rows: Record<string, unknown>;
+    bodies: Record<string, unknown>;
+    pages: Record<string, unknown>;
+    schemaVersion: number;
+  };
+}
+
+type EnhancedEmailEditorOptions = EmailEditorProps['options'] & {
+  tools?: {
+    image?: {
+      onUpload: (
+        file: File,
+        onSuccess: (data: {
+          url: string;
+          width: number;
+          height: number;
+        }) => void
+      ) => void;
+    };
+    [key: string]: unknown;
+  };
+};
+
 const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const emailEditorRef = useRef<EditorRef>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuth() as { currentUser: User | null };
+
+  const [isClient, setIsClient] = useState(false);
+
+  // Only run on client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      const unlayer = emailEditorRef.current?.editor;
+      if (unlayer) {
+        unlayer.removeEventListener('design:loaded');
+        unlayer.removeEventListener('design:updated');
+      }
+    };
+  }, []);
 
   const handleImageUpload = async (
     file: File,
-    onSuccess: (data: any) => void
+    onSuccess: (data: { url: string; width: number; height: number }) => void
   ) => {
     try {
       if (!currentUser?.uid) {
@@ -42,8 +99,8 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
       // Return data in format expected by Unlayer editor
       onSuccess({
         url: uploadedImage.url,
-        width: uploadedImage.width,
-        height: uploadedImage.height,
+        width: uploadedImage.width ?? dimensions.width,
+        height: uploadedImage.height ?? dimensions.height,
       });
     } catch (error) {
       console.error('Failed to upload image:', error);
@@ -81,7 +138,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const saveDesign = () => {
     const unlayer = emailEditorRef.current?.editor;
 
-    unlayer?.saveDesign(async (design) => {
+    unlayer?.saveDesign(async (design: EmailDesign) => {
       // post to database
       await saveMockDesign(templateId, design);
       console.log('saveDesign', design);
@@ -93,27 +150,20 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     saveDesign();
   };
 
-  // temp debounce
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-  };
+  const debouncedAutoSave = useCallback(
+    debounce((changes) => onUpdateAutoSave(), 5000),
+    [templateId]
+  );
 
-  const onDesignUpdate = (data) => {
+  const onDesignUpdate = (data: UnlayerDesignUpdateEvent) => {
     const unlayer = emailEditorRef.current?.editor;
     // Design has been updated by the user
+    console.log('design:updated', data);
 
     const { type, item, changes } = data;
     console.log('design:updated', type, item, changes);
-    // Debounce the onUpdateAutoSave function to limit the number of calls
+    // Debounce the onUpdateAutoSave function to limit the number of call
 
-    // add to saga
-    const debouncedAutoSave = debounce(onUpdateAutoSave, 5000);
     debouncedAutoSave(changes);
 
     // undo/redo state
@@ -135,7 +185,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     unlayer?.redo();
   };
 
-  const onDesignLoad = (data) => {
+  const onDesignLoad = (data: DesignLoadData) => {
     console.log('onDesignLoad', data);
   };
 
@@ -143,25 +193,18 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     console.log('onLoad', unlayer);
     unlayer.addEventListener('design:loaded', onDesignLoad);
     unlayer.addEventListener('design:updated', onDesignUpdate);
+
     const design = await fetchMockDesigns(templateId);
     unlayer.loadDesign(design);
-
-    return () => {
-      unlayer.removeEventListener('design:loaded');
-      unlayer.removeEventListener('design:updated');
-    };
   };
 
   const onReady: EmailEditorProps['onReady'] = (unlayer) => {
-    // editor is ready
-    // you can load your template here;
-    // the design json can be obtained by calling
-    // unlayer.loadDesign(callback) or unlayer.exportHtml(callback)
-    // const templateJson = { DESIGN JSON GOES HERE };
-    // unlayer.loadDesign(templateJson);
-
     console.log('onReady', unlayer);
   };
+
+  if (!isClient) {
+    return <div>Loading editor...</div>;
+  }
 
   return (
     <>
@@ -179,10 +222,18 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
         </ButtonGroup>
       </EmailEditorHeading>
       <EmailEditor
-        options={{ tools: { image: { onUpload: handleImageUpload } } }}
+        options={
+          {
+            id: 'editor',
+            tools: {
+              image: { onUpload: handleImageUpload },
+            },
+          } as EnhancedEmailEditorOptions
+        }
         ref={emailEditorRef}
         onReady={onReady}
         onLoad={onLoad}
+        style={{ width: '100%', height: '100vh' }}
       />
     </>
   );
