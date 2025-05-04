@@ -1,3 +1,12 @@
+interface ErrorWithMessage {
+  message?: string;
+  error?: string;
+  data?: {
+    error?: string;
+    message?: string;
+  };
+}
+
 export const getErrorMessage = (error: unknown): string => {
   if (!error) return 'An unexpected error occurred';
 
@@ -8,7 +17,7 @@ export const getErrorMessage = (error: unknown): string => {
 
   // For RTK Query errors (using type assertion)
   if (typeof error === 'object') {
-    const err = error as any;
+    const err = error as ErrorWithMessage;
 
     // Check common error message locations in order of preference
     if (err.data?.error) return err.data.error;
