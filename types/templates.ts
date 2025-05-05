@@ -1,29 +1,20 @@
 import { Timestamp } from 'firebase/firestore';
+import emailDesignMock from '@/mocks/designs/emailDesignMock.json';
 
-// Unlayer design structure
 export interface EmailDesign {
   body: {
+    id: string;
+    headers: [];
+    footers: [];
     rows: Array<{
-      cells: Array<{
-        content: Record<string, unknown>;
-        values: Record<string, unknown>;
-      }>;
+      id: string;
+      columns: [];
+      cells: number[];
       values: Record<string, unknown>;
     }>;
-    values: {
-      backgroundColor?: string;
-      width?: number;
-      padding?: string;
-      [key: string]: unknown;
-    };
+    values: Record<string, unknown>;
   };
-  counters: {
-    u_row: number;
-    u_column: number;
-    u_content_text: number;
-    u_content_image: number;
-    [key: string]: number;
-  };
+  counters: Record<string, number>;
   schemaVersion: number;
   [key: string]: unknown;
 }
