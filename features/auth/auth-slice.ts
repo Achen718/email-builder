@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { UserData } from '@/features/auth/hooks/useAuth';
 
 export interface IAuthState {
-  currentUser: string | null;
+  currentUser: UserData | null;
   success: boolean;
   error: string | null;
   authLoading: boolean;
@@ -30,6 +31,7 @@ const authSlice = createSlice({
     clearCredentials: (state) => {
       state.currentUser = null;
       state.userToken = null;
+      state.authLoading = false;
       state.success = false;
     },
     // For handling auth errors outside of RTK Query
