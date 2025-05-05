@@ -5,6 +5,10 @@ import { uploadImageToS3 } from '@/services/storage/image-storage';
 import { debounce } from 'lodash';
 import { EmailDesign } from '@/types/templates';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import {
+  getTemplateById,
+  saveTemplateDesign,
+} from '@/services/firestore/templates-db';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import { fetchMockDesigns, saveMockDesign } from '@/mocks/apiMocks';
@@ -57,6 +61,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   const emailEditorRef = useRef<EditorRef>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { currentUser } = useAuth() as { currentUser: User | null };
 
   const [isClient, setIsClient] = useState(false);
@@ -139,9 +144,17 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     const unlayer = emailEditorRef.current?.editor;
 
     unlayer?.saveDesign(async (design: EmailDesign) => {
-      // post to database
-      await saveMockDesign(templateId, design);
-      console.log('saveDesign', design);
+      try {
+        if (!currentUser?.uid) {
+          throw new Error('User not authenticated');
+        }
+
+        // Use your existing function
+        await saveTemplateDesign(currentUser.uid, templateId, design);
+        console.log('Template saved to Firestore');
+      } catch (error) {
+        console.error('Error saving template:', error);
+      }
     });
   };
 
@@ -190,12 +203,28 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   };
 
   const onLoad: EmailEditorProps['onLoad'] = async (unlayer) => {
-    console.log('onLoad', unlayer);
     unlayer.addEventListener('design:loaded', onDesignLoad);
     unlayer.addEventListener('design:updated', onDesignUpdate);
 
-    const design = await fetchMockDesigns(templateId);
-    unlayer.loadDesign(design);
+    try {
+      if (!currentUser?.uid) {
+        throw new Error('User not authenticated');
+      }
+
+      setIsLoading(true);
+      // Use your existing function with correct parameter order
+      const template = await getTemplateById(templateId, currentUser.uid);
+
+      if (template && template.design) {
+        unlayer.loadDesign(template.design as any);
+      } else {
+        console.error('Template not found');
+      }
+    } catch (error) {
+      console.error('Error loading template:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onReady: EmailEditorProps['onReady'] = (unlayer) => {
