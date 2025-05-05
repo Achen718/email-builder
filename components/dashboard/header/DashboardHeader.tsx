@@ -1,5 +1,5 @@
 'use client';
-
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import {
   Box,
   Flex,
@@ -20,7 +20,12 @@ import Sidebar from '../side-bar/Sidebar';
 
 const DashboardHeader = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { currentUser, logout } = useAuth();
 
+  const handleLogout = async () => {
+    await logout();
+    // Will redirect automatically through your auth setup
+  };
   return (
     <>
       <Box bg={useColorModeValue('white', 'gray.900')} px={4}>
@@ -55,12 +60,19 @@ const DashboardHeader = () => {
                   <br />
                   <Center>
                     {/* replace with auth user */}
-                    <p>Username</p>
+                    <Center>
+                      {/* Update this to show the actual user */}
+                      <p>
+                        {currentUser?.displayName ||
+                          currentUser?.email ||
+                          'Guest'}
+                      </p>
+                    </Center>
                   </Center>
                   <br />
                   <MenuDivider />
                   <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Stack>

@@ -17,7 +17,15 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
     >
       {templates &&
         templates.map(
-          ({ id, name, displayMode, updatedAt, createdAt, design }) => (
+          ({
+            id,
+            name,
+            displayMode,
+            updatedAt,
+            createdAt,
+            design,
+            thumbnail,
+          }) => (
             <TemplatesCard
               key={id}
               name={name}
@@ -25,6 +33,7 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
               id={id}
               updatedAt={updatedAt}
               createdAt={createdAt}
+              thumbnail={thumbnail}
               design={design}
             />
           )

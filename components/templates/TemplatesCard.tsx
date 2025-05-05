@@ -11,10 +11,14 @@ import {
 } from '@chakra-ui/react';
 import { formatDate } from '@/utils/formatDate';
 import { Template } from '@/types/templates';
-const IMAGE =
-  'https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80';
 
-const TemplatesCard = ({ name, displayMode, id, updatedAt }: Template) => {
+const TemplatesCard = ({
+  name,
+  displayMode,
+  id,
+  updatedAt,
+  thumbnail,
+}: Template) => {
   const formattedPostedDate = formatDate(updatedAt);
 
   return (
@@ -45,7 +49,7 @@ const TemplatesCard = ({ name, displayMode, id, updatedAt }: Template) => {
             pos: 'absolute',
             top: 5,
             left: 0,
-            backgroundImage: `url(${IMAGE})`,
+            backgroundImage: `url(${thumbnail})`,
             filter: 'blur(15px)',
             zIndex: -1,
           }}
@@ -60,7 +64,7 @@ const TemplatesCard = ({ name, displayMode, id, updatedAt }: Template) => {
             height={230}
             width={282}
             objectFit={'cover'}
-            src={IMAGE}
+            src={thumbnail}
             alt='#'
           />
         </Box>
