@@ -25,6 +25,7 @@ const TemplatesCard = ({
     <>
       <Box
         as={NextLink}
+        data-testid='template-card-link'
         href={`templates/${id}`}
         role={'group'}
         p={6}
