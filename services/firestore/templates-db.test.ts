@@ -103,10 +103,23 @@ describe('Template Database Operations', () => {
   test('saveTemplateDesign should update template design', async () => {
     const design = {
       body: {
-        rows: [{ cells: [{ content: {}, values: {} }], values: {} }],
+        id: 'mock-body-id',
+        headers: [],
+        footers: [],
+        rows: [
+          {
+            id: 'mock-row-id',
+            columns: [],
+            cells: [1],
+            values: {},
+          },
+        ],
         values: {},
       },
-      counters: {},
+      counters: {
+        u_row: 1,
+        u_column: 1,
+      },
       schemaVersion: 1,
     } as EmailDesign;
 
