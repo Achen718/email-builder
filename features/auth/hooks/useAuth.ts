@@ -1,5 +1,6 @@
 import { useAppDispatch } from '@/lib/hooks/hooks';
 import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase/client-app';
 import { setCredentials, clearCredentials } from '@/features/auth/auth-slice';
 import {
   useSignUpWithEmailMutation,
@@ -100,8 +101,17 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
+      // clear firebase auth state
+      await auth.signOut();
+
+      localStorage.removeItem('firebase:authUser:YOUR_API_KEY:[DEFAULT]');
+      localStorage.removeItem('firebase:token');
+
+      // clear server session
       await logoutUser({}).unwrap();
+      // clear redux store
       dispatch(clearCredentials());
+
       showSuccess('Logged out successfully');
       router.push('/');
       return true;
