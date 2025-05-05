@@ -15,9 +15,11 @@ import { isEmailDesign } from '@/utils/validateEmailDesign';
 
 // Create a new template
 export const createTemplate = async (
+  userId: string, // Add userId parameter
   templateData: Partial<Template>
 ): Promise<string> => {
-  const templatesRef = collection(db, 'templates');
+  // Fix: Use subcollection path
+  const templatesRef = collection(db, 'users', userId, 'templates');
   const newTemplateRef = doc(templatesRef);
 
   await setDoc(newTemplateRef, {
@@ -32,15 +34,13 @@ export const createTemplate = async (
 
 // Save or update a template design
 export const saveTemplateDesign = async (
+  userId: string, // Add userId parameter
   templateId: string,
   design: EmailDesign,
   metadata: Partial<Template> = {}
 ): Promise<void> => {
-  if (!isEmailDesign(design)) {
-    throw new Error('Invalid email design structure');
-  }
-
-  const templateRef = doc(db, 'templates', templateId);
+  // Fix: Use subcollection path
+  const templateRef = doc(db, 'users', userId, 'templates', templateId);
 
   await updateDoc(templateRef, {
     design,
@@ -51,10 +51,8 @@ export const saveTemplateDesign = async (
 
 // Get all templates for a user
 export const getUserTemplates = async (userId: string): Promise<Template[]> => {
-  const templatesQuery = query(
-    collection(db, 'templates'),
-    where('userId', '==', userId)
-  );
+  // Fix: Use subcollection path to match distribution script
+  const templatesQuery = query(collection(db, 'users', userId, 'templates'));
 
   const snapshot = await getDocs(templatesQuery);
   return snapshot.docs.map((doc) => ({ ...doc.data() } as Template));
@@ -62,9 +60,11 @@ export const getUserTemplates = async (userId: string): Promise<Template[]> => {
 
 // Get a template by id
 export const getTemplateById = async (
-  templateId: string
+  templateId: string,
+  userId: string // Add userId parameter
 ): Promise<Template | null> => {
-  const templateRef = doc(db, 'templates', templateId);
+  // Fix: Use subcollection path
+  const templateRef = doc(db, 'users', userId, 'templates', templateId);
   const snapshot = await getDoc(templateRef);
 
   if (!snapshot.exists()) return null;
