@@ -135,6 +135,64 @@ export async function addDefaultTemplate(
   }
 }
 
+/**
+ * Copies all default templates to a specific user's templates collection
+ * Used when creating new user accounts to give them starter templates
+ */
+export async function addDefaultTemplatesForUser(
+  userId: string
+): Promise<void> {
+  try {
+    console.log(`Adding default templates for user ${userId}...`);
+
+    // Get all default templates using your existing function
+    const defaultTemplates = await getDefaultTemplates();
+
+    if (defaultTemplates.length === 0) {
+      console.log('No default templates found to add for new user');
+      return;
+    }
+
+    // Create a batch write operation for efficiency
+    const batch = adminDb.batch();
+    let count = 0;
+
+    // Add each template to the user's collection
+    for (const template of defaultTemplates) {
+      const userTemplateRef = adminDb
+        .collection('users')
+        .doc(userId)
+        .collection('templates')
+        .doc();
+
+      batch.set(userTemplateRef, {
+        id: userTemplateRef.id,
+        name: template.name,
+        design: template.design, // Already processed when added as default template
+        displayMode: template.displayMode,
+        category: template.category || null,
+        thumbnail: template.thumbnail || null,
+        isDefault: true,
+        sourceTemplateId: template.id,
+        userId: userId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      count++;
+    }
+
+    // Commit the batch
+    await batch.commit();
+    console.log(
+      `Successfully added ${count} default templates for user ${userId}`
+    );
+  } catch (error) {
+    console.error(`Error adding default templates for user ${userId}:`, error);
+    throw error;
+  }
+}
+
 // Get all default templates
 export async function getDefaultTemplates(): Promise<DefaultTemplate[]> {
   const snapshot = await adminDb.collection('default_templates').get();

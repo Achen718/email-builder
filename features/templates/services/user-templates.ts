@@ -1,4 +1,4 @@
-import { adminAuth, adminDb } from '@/lib/firebase/admin-app';
+import { adminDb } from '@/lib/firebase/admin-app';
 import * as dotenv from 'dotenv';
 import { FieldPath, Query, DocumentData } from 'firebase-admin/firestore';
 import { DefaultTemplate } from './default-templates';
@@ -163,4 +163,109 @@ if (require.main === module) {
       console.error('Script failed:', error);
       process.exit(1);
     });
+}
+
+export async function distributeTemplatesForUser(
+  userId: string
+): Promise<void> {
+  try {
+    console.log(`Starting template distribution for user ${userId}`);
+
+    // Get default templates - functional approach
+    const defaultTemplates = await getDefaultTemplatesArray();
+
+    if (defaultTemplates.length === 0) {
+      console.log('No templates found to distribute');
+      return;
+    }
+
+    // Get user's existing template IDs - functional extraction
+    const existingTemplateIds = await getUserExistingTemplateIds(userId);
+
+    // Filter templates that need to be added (pure function)
+    const templatesToAdd = defaultTemplates.filter(
+      (template) =>
+        template.id !== undefined && !existingTemplateIds.has(template.id)
+    );
+
+    if (templatesToAdd.length === 0) {
+      console.log(`User ${userId} already has all templates`);
+      return;
+    }
+
+    // Create batch operations using functional map
+    const batch = adminDb.batch();
+
+    // Transform templates into batch operations
+    templatesToAdd.forEach((template) => {
+      const userTemplateRef = adminDb
+        .collection('users')
+        .doc(userId)
+        .collection('templates')
+        .doc();
+
+      batch.set(
+        userTemplateRef,
+        createTemplateDocument(template, userId, userTemplateRef.id)
+      );
+    });
+
+    // Execute batch
+    await batch.commit();
+    console.log(`Added ${templatesToAdd.length} templates to user ${userId}`);
+  } catch (error) {
+    console.error(`Error distributing templates to user ${userId}:`, error);
+    throw error;
+  }
+}
+
+// Pure function to create template document
+function createTemplateDocument(
+  template: DefaultTemplate,
+  userId: string,
+  docId: string
+) {
+  return {
+    name: template.name || 'Untitled Template',
+    design: template.design || {},
+    displayMode: template.displayMode || 'Standard',
+    isDefault: true,
+    userId,
+    sourceTemplateId: template.id,
+    id: docId,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+// Pure function to get default templates
+async function getDefaultTemplatesArray(): Promise<DefaultTemplate[]> {
+  const defaultTemplatesSnapshot = await adminDb
+    .collection('default_templates')
+    .get();
+
+  return defaultTemplatesSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    name: doc.data().name || 'Untitled',
+    design: doc.data().design || {},
+    displayMode: doc.data().displayMode || 'Standard',
+  }));
+}
+
+// Function to extract user template IDs
+async function getUserExistingTemplateIds(
+  userId: string
+): Promise<Set<string>> {
+  const userTemplatesSnapshot = await adminDb
+    .collection('users')
+    .doc(userId)
+    .collection('templates')
+    .where('isDefault', '==', true)
+    .get();
+
+  return new Set(
+    userTemplatesSnapshot.docs
+      .map((doc) => doc.data().sourceTemplateId)
+      .filter(Boolean)
+  );
 }
