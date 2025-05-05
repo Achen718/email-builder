@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase/admin-app';
+import { addDefaultTemplatesForUser } from '@/features/templates/services/default-templates';
 
 export async function POST(request: Request) {
   try {
@@ -28,10 +29,15 @@ export async function POST(request: Request) {
         displayName,
         email,
         createdAt,
+        hasDefaultTemplates: true,
         ...additionalUserData,
       });
 
+      await addDefaultTemplatesForUser(uid);
       console.log(`User document created for ${uid}`);
+
+      // Call distributeTemplates only for this specific user
+      // await distributeTemplatesForUser(uid);
     } else {
       console.log(`User document already exists for ${uid}`);
     }
