@@ -7,7 +7,7 @@ import {
   updateDoc,
   serverTimestamp,
   query,
-  where,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client-app';
 import { Template, EmailDesign } from '@/types/templates';
@@ -15,7 +15,7 @@ import { isEmailDesign } from '@/utils/validateEmailDesign';
 
 // Create a new template
 export const createTemplate = async (
-  userId: string, // Add userId parameter
+  userId: string,
   templateData: Partial<Template>
 ): Promise<string> => {
   // Fix: Use subcollection path
@@ -34,7 +34,7 @@ export const createTemplate = async (
 
 // Save or update a template design
 export const saveTemplateDesign = async (
-  userId: string, // Add userId parameter
+  userId: string,
   templateId: string,
   design: EmailDesign,
   metadata: Partial<Template> = {}
@@ -61,7 +61,7 @@ export const getUserTemplates = async (userId: string): Promise<Template[]> => {
 // Get a template by id
 export const getTemplateById = async (
   templateId: string,
-  userId: string // Add userId parameter
+  userId: string
 ): Promise<Template | null> => {
   // Fix: Use subcollection path
   const templateRef = doc(db, 'users', userId, 'templates', templateId);
@@ -77,4 +77,12 @@ export const getTemplateById = async (
   }
 
   return { ...data } as Template;
+};
+
+export const deleteTemplate = async (
+  userId: string,
+  templateId: string
+): Promise<void> => {
+  const templateRef = doc(db, 'users', userId, 'templates', templateId);
+  await deleteDoc(templateRef);
 };
