@@ -31,6 +31,13 @@ export async function POST(request: Request) {
     const data = await response.json();
     const idToken = data.idToken;
 
+    // In your sign-up route handler
+    console.log(
+      `Generated token for user ${userRecord.uid}: ${idToken.substring(
+        0,
+        10
+      )}...`
+    );
     // Return the user data
     return NextResponse.json({
       success: true,

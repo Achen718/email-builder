@@ -18,7 +18,7 @@ export const firebaseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['User'],
+  tagTypes: ['User', 'Templates'],
   endpoints: (build) => ({
     // Keep your existing endpoint
     createUserDocument: build.mutation({
@@ -74,11 +74,44 @@ export const firebaseApi = createApi({
     }),
 
     signUpWithEmail: build.mutation({
-      query: ({ displayName, email, password }) => ({
-        url: '/api/auth/sign-up',
-        method: 'POST',
-        body: { displayName, email, password },
-      }),
+      async queryFn(
+        { email, password, displayName },
+        { dispatch },
+        _extraOptions,
+        baseQuery
+      ) {
+        try {
+          // 1. First call your existing signup API
+          const signupResult = await baseQuery({
+            url: '/api/auth/sign-up',
+            method: 'POST',
+            body: { email, password, displayName },
+          });
+
+          if (signupResult.error) return { error: signupResult.error };
+
+          const authResult = signupResult.data as { userToken: string };
+
+          // 2. IMPORTANT: Create the user document using your existing endpoint
+          await dispatch(
+            firebaseApi.endpoints.createUserDocument.initiate({
+              idToken: authResult.userToken,
+              additionalUserData: { displayName },
+            })
+          ).unwrap();
+
+          // 3. Return the original auth result
+          return { data: authResult };
+        } catch (error) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              data: error,
+              error: String(error),
+            },
+          };
+        }
+      },
       invalidatesTags: ['User'],
     }),
 

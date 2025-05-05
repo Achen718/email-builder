@@ -47,8 +47,14 @@ export async function POST(request: Request) {
   try {
     const { idToken } = await request.json();
 
+    // Add logging to verify unique tokens
+    console.log(
+      `Creating session for token hash: ${idToken.substring(0, 10)}...`
+    );
+
     // Verify the ID token
     const decodedToken = await adminAuth.verifyIdToken(idToken);
+    console.log(`Creating session for user: ${decodedToken.uid}`);
 
     // Create session cookie
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
@@ -56,16 +62,22 @@ export async function POST(request: Request) {
       expiresIn,
     });
 
-    // Return success with secure cookie
-    return NextResponse.json(
-      { success: true },
-      {
-        status: 200,
-        headers: {
-          'Set-Cookie': `session=${sessionCookie}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${expiresIn};`,
-        },
-      }
-    );
+    // Use the cookies API instead of headers
+    cookies().set('session', sessionCookie, {
+      maxAge: expiresIn / 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      sameSite: 'strict',
+    });
+
+    // set user ID in a separate (less secure) cookie for debugging
+    cookies().set('debug_uid', decodedToken.uid, {
+      maxAge: expiresIn / 1000,
+      path: '/',
+    });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Session creation error:', error);
     return NextResponse.json(
