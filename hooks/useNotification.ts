@@ -4,11 +4,13 @@ import { getErrorMessage } from '@/utils/getErrorMessage';
 export const useNotification = () => {
   const toast = useToast();
 
-  const showSuccess = (title: string) => {
+  const showSuccess = (title: string, description?: string) => {
     toast({
       title,
+      description,
       status: 'success',
       duration: 3000,
+      isClosable: true,
     });
   };
 
@@ -18,6 +20,7 @@ export const useNotification = () => {
       description: getErrorMessage(error),
       status: 'error',
       duration: 5000,
+      isClosable: true,
     });
   };
 
