@@ -5,13 +5,13 @@ import { uploadImageToS3 } from '@/services/storage/image-storage';
 import { debounce } from 'lodash';
 import { EmailDesign } from '@/types/templates';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { isEmailDesign } from '@/utils/validateEmailDesign';
 import {
   getTemplateById,
   saveTemplateDesign,
 } from '@/services/firestore/templates-db';
 // separate component
 import { Button, ButtonGroup } from '@chakra-ui/react';
-import { fetchMockDesigns, saveMockDesign } from '@/mocks/apiMocks';
 import EmailEditorHeading from './EmailEditorHeader';
 
 interface DisplayEmailEditorProps {
@@ -160,7 +160,8 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
 
   const onUpdateAutoSave = () => {
     // Design has been updated by the user
-    saveDesign();
+    console.log('trigger auto save');
+    // saveDesign();
   };
 
   const debouncedAutoSave = useCallback(
@@ -215,8 +216,8 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
       // Use your existing function with correct parameter order
       const template = await getTemplateById(templateId, currentUser.uid);
 
-      if (template && template.design) {
-        unlayer.loadDesign(template.design as any);
+      if (template && template.design && isEmailDesign(template.design)) {
+        unlayer.loadDesign(template.design);
       } else {
         console.error('Template not found');
       }
