@@ -7,6 +7,10 @@ jest.mock('@/app/(app)/dashboard/_hooks', () => ({
   useItems: jest.fn(),
 }));
 
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(),
+}));
+
 describe('Templates Page', () => {
   test('should display templates when loaded', async () => {
     // Mock the hook return value
@@ -20,7 +24,7 @@ describe('Templates Page', () => {
       refetch: jest.fn(),
     });
 
-    render(<TemplatesPage />);
+    renderProviders(<TemplatesPage />);
 
     // Verify templates appear
     expect(screen.getByText('Template 1')).toBeInTheDocument();
