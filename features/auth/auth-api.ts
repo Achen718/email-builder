@@ -1,12 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { googleSignIn } from '@/services/auth/client-auth';
 import type { RootState } from '@/lib/store/store';
+import { setCredentials } from '@/features/auth/auth-slice';
+import { UserData } from '@/features/auth/hooks/useAuth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase/client-app';
 
 export const firebaseApi = createApi({
   reducerPath: 'firebaseApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '/',
-    // fix jest warning: ReferenceError: fetch is not defined
     fetchFn: typeof window !== 'undefined' ? undefined : global.fetch,
     prepareHeaders: (headers, { getState }) => {
       // Get token from state
@@ -40,17 +43,14 @@ export const firebaseApi = createApi({
     googleLogin: build.mutation({
       async queryFn(_, { dispatch }) {
         try {
-          // 1. Get user from Firebase
           const authResult = await googleSignIn();
 
-          // 2. Create user document using existing mutation
           const result = await dispatch(
             firebaseApi.endpoints.createUserDocument.initiate({
               idToken: authResult.userToken,
             })
           ).unwrap();
 
-          // 3. Return complete result
           return { data: authResult };
         } catch (error) {
           return {
@@ -63,13 +63,56 @@ export const firebaseApi = createApi({
         }
       },
     }),
-    // Replace mockAuth endpoints with real ones - APi first approach
+
     loginWithEmail: build.mutation({
-      query: ({ email, password }) => ({
-        url: '/api/auth/login',
-        method: 'POST',
-        body: { email, password },
-      }),
+      async queryFn(
+        { email, password },
+        { dispatch },
+        _extraOptions,
+        baseQuery
+      ) {
+        try {
+          // Authenticate with endpoint first
+          const loginResult = await baseQuery({
+            url: '/api/auth/login',
+            method: 'POST',
+            body: { email, password },
+          });
+
+          if (loginResult.error) return { error: loginResult.error };
+
+          const { user, userToken } = loginResult.data as {
+            user: UserData;
+            userToken: string;
+          };
+
+          // IMPORTANT: Also sign in with Firebase client SDK
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log('Firebase client auth successful');
+          } catch (firebaseError) {
+            console.error('Firebase client auth error:', firebaseError);
+          }
+
+          // Update Redux store fallback -- onAuthStateChanged will also do this
+          dispatch(
+            setCredentials({
+              user,
+              token: userToken,
+            })
+          );
+
+          return { data: loginResult.data };
+        } catch (error) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              data: error,
+              error: String(error),
+            },
+          };
+        }
+      },
       invalidatesTags: ['User'],
     }),
 
@@ -81,7 +124,6 @@ export const firebaseApi = createApi({
         baseQuery
       ) {
         try {
-          // 1. First call your existing signup API
           const signupResult = await baseQuery({
             url: '/api/auth/sign-up',
             method: 'POST',
@@ -92,7 +134,7 @@ export const firebaseApi = createApi({
 
           const authResult = signupResult.data as { userToken: string };
 
-          // 2. IMPORTANT: Create the user document using your existing endpoint
+          // Create the user document using existing endpoint
           await dispatch(
             firebaseApi.endpoints.createUserDocument.initiate({
               idToken: authResult.userToken,
@@ -100,7 +142,7 @@ export const firebaseApi = createApi({
             })
           ).unwrap();
 
-          // 3. Return the original auth result
+          // Return the original auth result
           return { data: authResult };
         } catch (error) {
           return {
@@ -115,7 +157,6 @@ export const firebaseApi = createApi({
       invalidatesTags: ['User'],
     }),
 
-    // Replace userAuth with session check
     getCurrentUser: build.query({
       query: () => '/api/auth/session',
       providesTags: ['User'],
