@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase/admin-app';
 import { addDefaultTemplatesForUser } from '@/features/templates/services/default-templates';
+import { verifyIdToken } from '@/services/auth/admin-auth';
 
 export async function POST(request: Request) {
   try {
     const { idToken, additionalUserData = {} } = await request.json();
 
     // Verify token & create user document with Admin SDK
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    const decodedToken = await verifyIdToken(idToken);
     const uid = decodedToken.uid;
 
     // Get user data from auth

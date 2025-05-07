@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase/admin-app';
 import { cookies } from 'next/headers';
+import { verifyIdToken } from '@/services/auth/admin-auth';
 
 export async function GET() {
   try {
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
     );
 
     // Verify the ID token
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    const decodedToken = await verifyIdToken(idToken);
     console.log(`Creating session for user: ${decodedToken.uid}`);
 
     // Create session cookie
