@@ -12,6 +12,7 @@ import {
 import { db } from '@/lib/firebase/client-app';
 import { Template, EmailDesign } from '@/types/templates';
 import { isEmailDesign } from '@/utils/validateEmailDesign';
+import { sanitizeDataForFirestore } from '@/utils/sanitizeData';
 
 // Create a new template
 export const createTemplate = async (
@@ -42,10 +43,13 @@ export const saveTemplateDesign = async (
   // Fix: Use subcollection path
   const templateRef = doc(db, 'users', userId, 'templates', templateId);
 
+  const sanitizedDesign = sanitizeDataForFirestore(design);
+  const sanitizedMetadata = sanitizeDataForFirestore(metadata);
+
   await updateDoc(templateRef, {
-    design,
+    design: sanitizedDesign,
     updatedAt: serverTimestamp(),
-    ...metadata,
+    ...sanitizedMetadata,
   });
 };
 
