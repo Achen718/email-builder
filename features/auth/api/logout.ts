@@ -1,17 +1,11 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-
-export async function POST() {
-  cookies().delete('session');
-
-  return NextResponse.json(
-    { success: true },
-    {
-      status: 200,
-      headers: {
-        'Set-Cookie':
-          'session=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0',
-      },
-    }
-  );
+/**
+ * Core login business logic, separated from the API route handler
+ * This makes it independently testable and reusable
+ */
+export function logoutUser() {
+  // Return the cookie settings needed to clear the session
+  return {
+    cookieSetting:
+      'session=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0',
+  };
 }
