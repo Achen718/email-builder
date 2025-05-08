@@ -33,7 +33,6 @@ describe('Firebase Client App', () => {
 
   beforeEach(() => {
     jest.resetModules();
-    jest.clearAllMocks();
 
     // typed mock objects
     mockApp = { name: 'test-app' } as MockFirebaseApp;
