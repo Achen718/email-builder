@@ -140,13 +140,6 @@ vercel
 5. **Set Environment Variables**:
    - Add all Firebase environment variables from your `.env.local` file to your Vercel project settings.
 
-## Component Documentation
-
-This project uses Storybook for component documentation and development:
-
-```bash
-# Run Storybook locally
-npm run storybook
 
 ## Contributing
 
