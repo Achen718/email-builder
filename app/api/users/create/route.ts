@@ -1,52 +1,22 @@
 import { NextResponse } from 'next/server';
-import { adminAuth, adminDb } from '@/lib/firebase/admin-app';
-import { addDefaultTemplatesForUser } from '@/features/templates/services/default-templates';
-import { verifyIdToken } from '@/services/auth/admin-auth';
+import { createUserDocument } from '@/features/users/api/create-user';
 
 export async function POST(request: Request) {
   try {
     const { idToken, additionalUserData = {} } = await request.json();
 
-    // Verify token & create user document with Admin SDK
-    const decodedToken = await verifyIdToken(idToken);
-    const uid = decodedToken.uid;
+    const result = await createUserDocument(idToken, additionalUserData);
 
-    // Get user data from auth
-    const userRecord = await adminAuth.getUser(uid);
-
-    // Reference to user document
-    const userRef = adminDb.collection('users').doc(uid);
-
-    // Check if user document already exists
-    const userDoc = await userRef.get();
-
-    if (!userDoc.exists) {
-      // Extract user data
-      const { displayName, email } = userRecord;
-      const createdAt = new Date();
-
-      // Create the user document
-      await userRef.set({
-        displayName,
-        email,
-        createdAt,
-        hasDefaultTemplates: true,
-        ...additionalUserData,
-      });
-
-      await addDefaultTemplatesForUser(uid);
-      console.log(`User document created for ${uid}`);
-
-      // Call distributeTemplates only for this specific user
-      // await distributeTemplatesForUser(uid);
+    if (result.isNewUser) {
+      console.log(`User document created for ${result.userId}`);
     } else {
-      console.log(`User document already exists for ${uid}`);
+      console.log(`User document already exists for ${result.userId}`);
     }
 
     return NextResponse.json({
       success: true,
-      userId: uid,
-      documentId: userRef.id,
+      userId: result.userId,
+      documentId: result.documentId,
     });
   } catch (error) {
     console.error('Error creating user document:', error);
