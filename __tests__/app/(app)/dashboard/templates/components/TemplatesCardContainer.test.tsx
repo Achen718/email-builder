@@ -1,13 +1,13 @@
 import { screen } from '@testing-library/react';
 import { renderProviders } from '@/utils/test.utils';
-import TemplatesCardContainer from '@/components/templates/TemplatesCardContainer';
+import { TemplatesCardContainer } from '@/app/(app)/dashboard/templates/_components/index';
 import { Template, EmailDesign } from '@/types/templates';
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock('@/components/templates/TemplatesCard', () => {
+jest.mock('@/app/(app)/dashboard/templates/_components/TemplatesCard', () => {
   return function MockTemplatesCard({
     name,
     thumbnail,

@@ -1,6 +1,6 @@
 import { screen, fireEvent } from '@testing-library/react';
 import { renderProviders } from '@/utils/test.utils';
-import TemplatesCard from '@/components/templates/TemplatesCard';
+import { TemplatesCard } from '@/app/(app)/dashboard/templates/_components/index';
 import { useRouter } from 'next/navigation';
 import { EmailDesign } from '@/types/templates';
 
@@ -10,7 +10,6 @@ jest.mock('next/navigation', () => ({
 }));
 
 describe('TemplatesCard', () => {
-  // Use your existing EmailDesign mock structure from the container test
   const mockDesign = {
     body: {
       id: 'mock-body-id',

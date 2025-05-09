@@ -1,11 +1,12 @@
 'use client';
 import { useItems } from '@hooks';
-import TemplatesCardContainer from '@/components/templates/TemplatesCardContainer';
+import { TemplatesCardContainer } from '@/app/(app)/dashboard/templates/_components/index';
 import Loading from '@/components/ui/Loading';
 
 const TemplatesPage = () => {
   const { items: templates, loading, error, refetch } = useItems('templates');
 
+  // Todo: refactor this to a component
   if (loading) {
     return (
       <div className='flex flex-col items-center justify-center py-10'>
@@ -19,6 +20,7 @@ const TemplatesPage = () => {
 
   if (error) return <div>Error loading templates: {error.message}</div>;
 
+  // Todo: refactor this to a component
   if (templates.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center py-10'>
