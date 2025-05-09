@@ -1,16 +1,15 @@
-import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase/admin-app';
-import { cookies } from 'next/headers';
+import { verifyIdToken } from '@/services/auth/admin-auth';
 
-export async function GET() {
+/**
+ * Verifies a session cookie and retrieves the associated user data
+ */
+export async function verifyUserSession(sessionCookie: string | undefined) {
+  if (!sessionCookie) {
+    return { authenticated: false };
+  }
+
   try {
-    // Get session cookie
-    const sessionCookie = cookies().get('session')?.value;
-
-    if (!sessionCookie) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
-    }
-
     // Verify session
     const decodedClaims = await adminAuth.verifySessionCookie(
       sessionCookie,
@@ -22,33 +21,36 @@ export async function GET() {
     const userDoc = await adminDb.collection('users').doc(uid).get();
 
     if (!userDoc.exists) {
-      return NextResponse.json({
+      return {
         authenticated: true,
         user: { uid, email: decodedClaims.email },
-      });
+      };
     }
 
     // Return user data from Firestore
-    return NextResponse.json({
+    return {
       authenticated: true,
       user: {
         uid,
         ...userDoc.data(),
       },
-    });
+    };
   } catch (error) {
-    // Invalid or expired session
-    cookies().delete('session');
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+    // validate session
+    return {
+      authenticated: false,
+      shouldClearCookie: true,
+    };
   }
 }
 
-export async function POST(request: Request) {
+/**
+ * Creates a session cookie from an ID token
+ */
+export async function createUserSession(idToken: string) {
   try {
-    const { idToken } = await request.json();
-
     // Verify the ID token
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    const decodedToken = await verifyIdToken(idToken);
 
     // Create session cookie
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
@@ -56,21 +58,16 @@ export async function POST(request: Request) {
       expiresIn,
     });
 
-    // Return success with secure cookie
-    return NextResponse.json(
-      { success: true },
-      {
-        status: 200,
-        headers: {
-          'Set-Cookie': `session=${sessionCookie}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${expiresIn};`,
-        },
-      }
-    );
+    return {
+      success: true,
+      sessionCookie,
+      expiresIn,
+      uid: decodedToken.uid,
+    };
   } catch (error) {
-    console.error('Session creation error:', error);
-    return NextResponse.json(
-      { success: false, error: (error as Error).message },
-      { status: 401 }
-    );
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Session creation failed',
+    };
   }
 }
