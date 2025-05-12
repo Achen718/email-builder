@@ -16,7 +16,7 @@ const defaultFormFields = {
 const LoginForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
-  const { login, isLoginLoading } = useAuth(); // Use your custom hook for auth
+  const { login, isLoginLoading } = useAuth();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,6 +54,7 @@ const LoginForm = () => {
             buttonText='Login'
             loading={isLoginLoading}
             type='submit'
+            data-testid='login-form-button'
           />
           <GoogleSignInButton />
         </Stack>
