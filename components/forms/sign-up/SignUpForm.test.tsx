@@ -1,4 +1,4 @@
-import { within, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { renderProviders } from '@/utils/test.utils';
 import SignUpForm from './SignUpForm';
 import { useAuth } from '@/features/auth/hooks/useAuth';
@@ -43,7 +43,7 @@ describe('SignUpForm', () => {
     (useToast as jest.Mock).mockReturnValue(mockToast);
   });
 
-  test('renders form with all required fields', () => {
+  it('renders form with all required fields', () => {
     renderSignUpForm();
 
     // Check if all form elements are rendered
@@ -59,7 +59,7 @@ describe('SignUpForm', () => {
     expect(screen.getByRole('link', { name: /Login/i })).toBeInTheDocument();
   });
 
-  test('updates form state when inputs change', () => {
+  it('updates form state when inputs change', () => {
     renderSignUpForm();
 
     const firstNameInput = screen.getByLabelText(/First Name/i);
@@ -82,7 +82,7 @@ describe('SignUpForm', () => {
     expect(confirmPasswordInput).toHaveValue('password123');
   });
 
-  test('shows error when passwords do not match', async () => {
+  it('shows error when passwords do not match', async () => {
     renderSignUpForm();
 
     const firstNameInput = screen.getByLabelText(/First Name/i);
@@ -112,7 +112,7 @@ describe('SignUpForm', () => {
     expect(mockSignUp).not.toHaveBeenCalled();
   });
 
-  test('submits form when passwords match', async () => {
+  it('submits form when passwords match', async () => {
     renderSignUpForm();
 
     const firstNameInput = screen.getByLabelText(/First Name/i);
@@ -138,7 +138,7 @@ describe('SignUpForm', () => {
     });
   });
 
-  test('displays loading state during form submission', () => {
+  it('displays loading state during form submission', () => {
     // Mock loading state
     (useAuth as jest.Mock).mockReturnValue({
       signUp: mockSignUp,
