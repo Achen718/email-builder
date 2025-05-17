@@ -23,6 +23,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@reduxjs/toolkit": "^2.3.0",
+    "ai-project-assistant": "github:Achen718/project-assistant",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.5.0",
