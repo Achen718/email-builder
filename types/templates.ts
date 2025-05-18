@@ -29,6 +29,6 @@ export interface Template {
   createdAt: Timestamp | Date | string;
   updatedAt: Timestamp | Date | string;
   design: EmailDesign;
-  isSystem?: boolean;
+  isDefault?: boolean;
   userId?: string;
 }
