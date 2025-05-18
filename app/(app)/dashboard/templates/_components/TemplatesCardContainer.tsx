@@ -3,8 +3,7 @@ import { Grid, Button, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import TemplatesCard from './TemplatesCard';
 import { Template } from '@/types/templates';
-import { createTemplate } from '@/services/firestore/templates-db';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useTemplatesService } from '@/features/templates/hooks/useTemplatesService';
 import { useNotification } from '@/hooks/useNotification';
 
 interface TemplatesCardContainerProps {
@@ -13,26 +12,25 @@ interface TemplatesCardContainerProps {
 
 const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
   const router = useRouter();
-  const { currentUser } = useAuth();
   const { showSuccess, showError } = useNotification();
+  const { createTemplate, deleteTemplate, isUserAuthenticated } =
+    useTemplatesService();
 
   const handleCreateTemplate = async () => {
+    if (!isUserAuthenticated) {
+      showError(
+        'Authentication required',
+        'Please sign in to create templates'
+      );
+      return;
+    }
     try {
-      if (!currentUser?.uid) {
-        showError(
-          'Authentication required',
-          'Please sign in to create templates'
-        );
-        return;
-      }
-      // Todo: Update Name and Display Mode -- user input
-      const templateId = await createTemplate(currentUser.uid, {
+      const templateId = await createTemplate({
+        // todo: make name editable
         name: 'New Template',
         displayMode: 'email',
       });
-
       showSuccess('Template created');
-
       router.push(`/dashboard/templates/${templateId}`);
     } catch (error) {
       console.error('Error creating template:', error);
@@ -43,9 +41,28 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
     }
   };
 
+  const handleDeleteTemplateInContainer = async (templateId: string) => {
+    if (!isUserAuthenticated) {
+      showError(
+        'Authentication required',
+        'Please sign in to delete templates'
+      );
+      return;
+    }
+    try {
+      await deleteTemplate(templateId);
+      showSuccess('Template deleted');
+      router.refresh();
+    } catch (error) {
+      showError(
+        'Error deleting template',
+        error instanceof Error ? error.message : 'Please try again'
+      );
+    }
+  };
+
   return (
     <>
-      {/*temp create template button*/}
       <Box mb={4} display='flex' justifyContent='flex-end'>
         <Button
           onClick={handleCreateTemplate}
@@ -55,9 +72,8 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
           Create Template
         </Button>
       </Box>
-      {/* existing templates */}
       <Grid
-        templateColumns='repeat(auto-fit, minmax(220px, 1fr))'
+        templateColumns='repeat(auto-fill, minmax(300px, 1fr))'
         mt='5'
         gap={6}
         p={4}
@@ -72,6 +88,7 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
               createdAt,
               design,
               thumbnail,
+              isDefault,
             }) => (
               <TemplatesCard
                 key={id}
@@ -81,7 +98,9 @@ const TemplatesCardContainer = ({ templates }: TemplatesCardContainerProps) => {
                 updatedAt={updatedAt}
                 createdAt={createdAt}
                 thumbnail={thumbnail}
+                isDefault={isDefault}
                 design={design}
+                onDelete={() => handleDeleteTemplateInContainer(id)}
               />
             )
           )}
