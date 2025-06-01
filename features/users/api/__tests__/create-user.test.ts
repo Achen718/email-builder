@@ -21,12 +21,10 @@ jest.mock('@/lib/firebase/admin-app', () => {
     adminDb: {
       collection: jest.fn().mockReturnValue(mockCollectionRef),
     },
-    // Export the mock so tests can access it
     __mockDocRef: mockDocRef,
   };
 });
 
-// (needs to happen after jest.mock)
 const { __mockDocRef: mockDocRef } = require('@/lib/firebase/admin-app');
 
 jest.mock('@/services/auth/admin-auth', () => ({
@@ -41,7 +39,6 @@ describe('createUserDocument', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Reset mock implementations
     mockDocRef.get.mockReset();
     mockDocRef.set.mockReset();
 
@@ -79,14 +76,9 @@ describe('createUserDocument', () => {
       isNewUser: true,
     });
   });
-
   test('should merge additional user data when creating new user document', async () => {
-    // Mock document doesn't exist
-    mockDocRef.get.mockResolvedValue({
-      exists: false,
-    });
+    mockDocRef.get.mockResolvedValue({ exists: false });
 
-    // Mock set to succeed
     mockDocRef.set.mockResolvedValue(undefined);
 
     const additionalData = { role: 'admin', plan: 'premium' };
@@ -101,12 +93,9 @@ describe('createUserDocument', () => {
       plan: 'premium',
     });
   });
-
   test('should not create document when user already exists', async () => {
-    // Get reference to the document methods
     const docRef = adminDb.collection('users').doc('test-uid');
 
-    // Mock document exists
     mockDocRef.get.mockResolvedValue({
       exists: true,
       id: 'test-uid',
@@ -152,7 +141,6 @@ describe('createUserDocument', () => {
       exists: false,
     });
 
-    // Mock set to fail
     mockDocRef.set.mockRejectedValue(new Error('Database error'));
 
     await expect(createUserDocument('valid-id-token')).rejects.toThrow(
@@ -160,17 +148,13 @@ describe('createUserDocument', () => {
     );
     expect(addDefaultTemplatesForUser).not.toHaveBeenCalled();
   });
-
   test('should throw error when adding default templates fails', async () => {
-    // Mock document doesn't exist
     mockDocRef.get.mockResolvedValue({
       exists: false,
     });
 
-    // Mock set to succeed
     mockDocRef.set.mockResolvedValue(undefined);
 
-    // Mock addDefaultTemplatesForUser to fail
     (addDefaultTemplatesForUser as jest.Mock).mockRejectedValue(
       new Error('Template creation failed')
     );

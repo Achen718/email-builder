@@ -4,7 +4,6 @@ import { TemplatesCard } from '@/app/(app)/dashboard/templates/_components/index
 import { useRouter } from 'next/navigation';
 import { EmailDesign } from '@/types/templates';
 
-// Mock the router
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
@@ -34,48 +33,32 @@ describe('TemplatesCard', () => {
 
   test('renders template information correctly', () => {
     renderProviders(<TemplatesCard {...mockProps} />);
-
     expect(screen.getByText('Test Template')).toBeInTheDocument();
-    // Use alt attribute instead of role for image
-    expect(screen.getByAltText('#')).toHaveAttribute(
+    expect(
+      screen.getByAltText('Green double couch with wooden legs')
+    ).toHaveAttribute(
       'src',
-      '/images/test-thumbnail.jpg'
+      '/_next/image?url=%2Fimages%2Ftest-thumbnail.jpg&w=3840&q=75'
     );
   });
-
   test('navigates to template editor when clicked', () => {
-    // First, update the component to include a data-testid
-    // Add this to the Box component in TemplatesCard.tsx:
-    // data-testid="template-card-link"
-
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-
     renderProviders(<TemplatesCard {...mockProps} />);
 
-    // Click on the card using data-testid instead of role
-    // This assumes you've added data-testid="template-card-link" to your Box component
-    fireEvent.click(screen.getByTestId('template-card-link'));
+    const link = screen.getByRole('link', { name: 'Test Template' });
+    fireEvent.click(link);
 
-    // Verify link href attribute
-    expect(screen.getByTestId('template-card-link')).toHaveAttribute(
-      'href',
-      'templates/template-123'
-    );
+    expect(link).toHaveAttribute('href', 'templates/template-123');
   });
-
   test('displays updated date in correct format', () => {
-    // Create a specific date for consistent testing
     const testDate = new Date('2023-05-01T12:00:00');
 
-    // Mock formatDate to return consistent value for testing
     jest.mock('@/utils/formatDate', () => ({
       formatDate: jest.fn().mockReturnValue('May 1, 2023'),
     }));
-
     renderProviders(<TemplatesCard {...mockProps} updatedAt={testDate} />);
 
-    // Check for text that includes both label and formatted date
     expect(screen.getByText(/Last updated:/)).toBeInTheDocument();
   });
 });

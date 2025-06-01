@@ -4,11 +4,9 @@ import { authenticateUser } from '@/features/auth/api/login';
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
-
     const { user, userToken, sessionCookie, expiresIn } =
       await authenticateUser(email, password);
 
-    // Return user data and token with cookie
     return NextResponse.json(
       {
         success: true,

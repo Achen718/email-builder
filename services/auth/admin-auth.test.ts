@@ -1,7 +1,6 @@
 import { verifyIdToken } from './admin-auth';
 import { adminAuth } from '@/lib/firebase/admin-app';
 
-// Mock the Firebase admin module
 jest.mock('@/lib/firebase/admin-app', () => ({
   adminAuth: {
     verifyIdToken: jest.fn(),
@@ -22,7 +21,6 @@ describe('verifyIdToken', () => {
     const mockToken = 'valid-id-token';
     const mockDecodedToken = { uid: 'user123', email: 'test@example.com' };
 
-    // Setup mock to return successful response
     (adminAuth.verifyIdToken as jest.Mock).mockResolvedValueOnce(
       mockDecodedToken
     );
@@ -37,7 +35,6 @@ describe('verifyIdToken', () => {
     const mockToken = 'invalid-id-token';
     const mockError = new Error('Firebase auth error');
 
-    // Setup mock to throw an error
     (adminAuth.verifyIdToken as jest.Mock).mockRejectedValueOnce(mockError);
 
     await expect(verifyIdToken(mockToken)).rejects.toThrow('Unauthorized');

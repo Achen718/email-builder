@@ -15,7 +15,6 @@ jest.mock('@/app/(app)/dashboard/templates/_components/TemplatesCard', () => {
     name: string;
     thumbnail: string;
   }) {
-    // Only using the props we need in the test
     return (
       <div data-testid='template-card'>
         <span>{name}</span>
@@ -72,7 +71,6 @@ describe('TemplatesCardContainer', () => {
   test('should render all template cards correctly', () => {
     renderProviders(<TemplatesCardContainer templates={mockTemplates} />);
 
-    // Test card content rendering
     expect(screen.getByText('Template 1')).toBeInTheDocument();
     expect(screen.getByText('Template 2')).toBeInTheDocument();
     expect(screen.getAllByRole('img').length).toBe(2);

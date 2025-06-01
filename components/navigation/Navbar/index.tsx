@@ -15,7 +15,6 @@ import NavActions from './Actions';
 import ThemeToggle from './ThemeToggle';
 import MobileToggle from './MobileToggle';
 
-// Create the context
 export const NavbarContext = createContext<{
   isOpen: boolean;
   onToggle: () => void;

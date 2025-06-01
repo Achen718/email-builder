@@ -1,13 +1,10 @@
-// Create this as a new .js file (not .ts)
 require('dotenv').config();
 const {
   addDefaultTemplate,
 } = require('../features/templates/services/default-templates');
-// Use direct Firebase Admin initialization
 const admin = require('firebase-admin');
 const emailDesignMock = require('../mocks/designs/emailDesignMock.json');
 
-// Initialize Firebase Admin directly from environment variables
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,

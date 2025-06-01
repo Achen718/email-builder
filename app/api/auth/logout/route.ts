@@ -4,7 +4,6 @@ import { logoutUser } from '@/features/auth/api/logout';
 
 export async function POST() {
   try {
-    // Clear the session cookie
     cookies().delete('session');
 
     const { cookieSetting } = logoutUser();

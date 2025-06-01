@@ -49,7 +49,6 @@ export const useAuth = () => {
     try {
       const result = await authAction;
 
-      // Handle success
       const authResult = result as AuthResult;
       dispatch(
         setCredentials({
@@ -98,18 +97,14 @@ export const useAuth = () => {
       'Google sign-in failed'
     );
   };
-
   const logout = async () => {
     try {
-      // clear firebase auth state
       await auth.signOut();
 
       localStorage.removeItem('firebase:authUser:YOUR_API_KEY:[DEFAULT]');
       localStorage.removeItem('firebase:token');
 
-      // clear server session
       await logoutUser({}).unwrap();
-      // clear redux store
       dispatch(clearCredentials());
 
       showSuccess('Logged out successfully');

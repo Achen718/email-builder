@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv';
 import { FieldPath, Query, DocumentData } from 'firebase-admin/firestore';
 import { DefaultTemplate } from './default-templates';
 
-// Load environment variables
 dotenv.config();
 
 /**
@@ -49,14 +48,11 @@ export async function distributeTemplates(templateId?: string) {
     }
 
     console.log(`Found ${defaultTemplates.length} template(s) to distribute`);
-
-    // Get all users in batches (Firestore has limits)
     let lastUid = null;
     let processedCount = 0;
     const batchSize = 100;
 
     while (true) {
-      // Build query for next batch of users
       let usersQuery = adminDb.collection('users').limit(batchSize);
       if (lastUid) {
         // Fix: Use document ID for ordering, not a field called 'uid'
@@ -73,14 +69,11 @@ export async function distributeTemplates(templateId?: string) {
       }
 
       console.log(`Processing batch of ${usersSnapshot.size} users`);
-
-      // Process each user in this batch
       for (const userDoc of usersSnapshot.docs) {
         const userId = userDoc.id;
         lastUid = userId;
 
         try {
-          // Get user's existing templates that came from default templates
           const userTemplatesSnapshot = await adminDb
             .collection('users')
             .doc(userId)
@@ -88,7 +81,6 @@ export async function distributeTemplates(templateId?: string) {
             .where('isDefault', '==', true)
             .get();
 
-          // Create a set of template IDs the user already has
           const existingTemplateIds = new Set();
           userTemplatesSnapshot.forEach((doc) => {
             const data = doc.data();
@@ -97,7 +89,6 @@ export async function distributeTemplates(templateId?: string) {
             }
           });
 
-          // Add any missing templates
           const batch = adminDb.batch();
           let addedCount = 0;
 
@@ -151,7 +142,6 @@ export const distributeNewTemplate = distributeTemplates;
 
 // Only run the script if this file is executed directly
 if (require.main === module) {
-  // Get the template ID from command line arguments if provided
   const targetTemplateId = process.argv[2];
 
   distributeTemplates(targetTemplateId)
@@ -171,7 +161,6 @@ export async function distributeTemplatesForUser(
   try {
     console.log(`Starting template distribution for user ${userId}`);
 
-    // Get default templates - functional approach
     const defaultTemplates = await getDefaultTemplatesArray();
 
     if (defaultTemplates.length === 0) {
@@ -179,7 +168,6 @@ export async function distributeTemplatesForUser(
       return;
     }
 
-    // Get user's existing template IDs - functional extraction
     const existingTemplateIds = await getUserExistingTemplateIds(userId);
 
     // Filter templates that need to be added (pure function)
@@ -193,7 +181,6 @@ export async function distributeTemplatesForUser(
       return;
     }
 
-    // Create batch operations using functional map
     const batch = adminDb.batch();
 
     // Transform templates into batch operations
@@ -210,7 +197,6 @@ export async function distributeTemplatesForUser(
       );
     });
 
-    // Execute batch
     await batch.commit();
     console.log(`Added ${templatesToAdd.length} templates to user ${userId}`);
   } catch (error) {

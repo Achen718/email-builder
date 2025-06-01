@@ -21,7 +21,6 @@ jest.mock('uuid', () => ({
 }));
 
 jest.mock('react-email-editor', () => {
-  // Create mock editor object
   const mockUnlayerEditor = {
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
@@ -103,18 +102,13 @@ describe('DisplayEmailEditor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Setup auth mock
     (useAuth as jest.Mock).mockReturnValue({
       currentUser: mockUser,
     });
 
-    // Setup template retrieval mock
     (getTemplateById as jest.Mock).mockResolvedValue(mockTemplate);
-
-    // Setup isEmailDesign mock
     (isEmailDesign as unknown as jest.Mock).mockReturnValue(true);
 
-    // mock uploadImageToS3
     (uploadImageToS3 as jest.Mock).mockResolvedValue({
       url: 'https://example.com/test-image.jpg',
       width: 800,
@@ -132,10 +126,8 @@ describe('DisplayEmailEditor', () => {
 
   test('loads template when component mounts', async () => {
     jest.clearAllMocks();
-
     renderProviders(<DisplayEmailEditor templateId='template-123' />);
 
-    // Wait for editor to be in document
     await waitFor(() => {
       expect(screen.getByTestId('email-editor')).toBeInTheDocument();
     });

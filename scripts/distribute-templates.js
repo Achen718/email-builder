@@ -1,10 +1,7 @@
-// Load environment variables
 require('dotenv').config();
 
-// Use direct Firebase Admin initialization
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin with environment variables
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -19,7 +16,6 @@ async function distributeTemplates() {
   try {
     console.log('Starting distribution of templates to all users...');
 
-    // Get default templates
     const defaultTemplatesSnapshot = await db
       .collection('default_templates')
       .get();
@@ -36,10 +32,8 @@ async function distributeTemplates() {
       console.log('No templates found to distribute');
       return;
     }
-
     console.log(`Found ${defaultTemplates.length} template(s) to distribute`);
 
-    // Get all users
     const usersSnapshot = await db.collection('users').get();
 
     if (usersSnapshot.empty) {
@@ -50,12 +44,9 @@ async function distributeTemplates() {
     console.log(`Found ${usersSnapshot.size} users for distribution`);
     let processedCount = 0;
 
-    // Process each user
     for (const userDoc of usersSnapshot.docs) {
       const userId = userDoc.id;
-
       try {
-        // Get user's existing templates
         const userTemplatesSnapshot = await db
           .collection('users')
           .doc(userId)
@@ -63,7 +54,6 @@ async function distributeTemplates() {
           .where('isDefault', '==', true)
           .get();
 
-        // Create a set of template IDs the user already has
         const existingTemplateIds = new Set();
         userTemplatesSnapshot.forEach((doc) => {
           const data = doc.data();
@@ -72,7 +62,6 @@ async function distributeTemplates() {
           }
         });
 
-        // Add any missing templates
         const batch = db.batch();
         let addedCount = 0;
 
@@ -122,7 +111,6 @@ async function distributeTemplates() {
   }
 }
 
-// Run the distribution
 distributeTemplates()
   .then(() => {
     console.log('Distribution script completed');

@@ -6,7 +6,6 @@ import { Template } from '@/types/templates';
 import { Design } from '@/types/designs';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
-// Set to true to use mock data for development/testing
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === 'true';
 
 type ItemsType<T> = T extends 'templates'
@@ -16,13 +15,11 @@ type ItemsType<T> = T extends 'templates'
   : never;
 
 export function useItems<T extends 'templates' | 'designs'>(type: T) {
-  // Use type-safe state with a cast to allow setting the initial empty array
   const [items, setItems] = useState<unknown>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const { currentUser, authLoading } = useAuth();
 
-  // Extract the fetch logic to a separate function
   const fetchItems = async () => {
     if (authLoading) return;
 
@@ -34,9 +31,7 @@ export function useItems<T extends 'templates' | 'designs'>(type: T) {
 
     try {
       setLoading(true);
-
       if (USE_MOCKS) {
-        // Use mock data for testing/development
         if (type === 'templates') {
           const templates = await fetchMockTemplates();
           setItems(templates as unknown);
@@ -45,16 +40,14 @@ export function useItems<T extends 'templates' | 'designs'>(type: T) {
           setItems(designs as unknown);
         }
       } else {
-        // Use real data from Firestore
         if (!currentUser) {
           throw new Error('User not authenticated');
         }
-
         if (type === 'templates') {
-          const templates = await getUserTemplates(currentUser.uid); // ✅ Pass the ID
+          const templates = await getUserTemplates(currentUser.uid);
           setItems(templates as unknown);
         } else {
-          const designs = await getUserDesigns(currentUser.uid); // ✅ Also fix this
+          const designs = await getUserDesigns(currentUser.uid);
           setItems(designs as unknown);
         }
       }
@@ -65,12 +58,10 @@ export function useItems<T extends 'templates' | 'designs'>(type: T) {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchItems();
   }, [type, currentUser, authLoading]);
 
-  // Add refetch function that leverages the same fetch logic
   const refetch = () => {
     fetchItems();
   };

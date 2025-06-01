@@ -38,10 +38,8 @@ export async function uploadImageToS3(
     ContentType:
       metadata.contentType || (file instanceof File ? file.type : 'image/jpeg'),
   });
-
   await s3Client.send(command);
 
-  // Use the getAssetUrl function to get CloudFront URL when available
   return {
     url: getAssetUrl(key),
     key,
@@ -65,11 +63,9 @@ export async function deleteImageFromS3(key: string): Promise<void> {
 export async function uploadAndGetCloudFrontUrl(
   originalUrl: string
 ): Promise<string> {
-  // Extract filename
   const urlParts = originalUrl.split('/');
   const filename = urlParts[urlParts.length - 1];
 
-  // Fetch image
   const response = await fetch(originalUrl);
   if (!response.ok) throw new Error(`Failed to fetch image: ${originalUrl}`);
 
@@ -84,9 +80,7 @@ export async function uploadAndGetCloudFrontUrl(
     ContentType: response.headers.get('content-type') || 'image/jpeg',
     // No ACL setting here
   });
-
   await s3Client.send(command);
 
-  // Get CloudFront URL using existing helper
   return getAssetUrl(s3Key);
 }

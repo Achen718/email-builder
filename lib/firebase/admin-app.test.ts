@@ -1,4 +1,3 @@
-// Mock Firebase Admin SDK
 jest.mock('firebase-admin/app', () => {
   const mockInitializeApp = jest.fn();
   const mockGetApps = jest.fn().mockReturnValue([]);
@@ -44,8 +43,6 @@ describe('Firebase Admin App', () => {
         cert: jest.fn().mockReturnValue({}),
       };
     });
-
-    // Import the module under test and the mocks
     const { adminApp } = require('./admin-app');
     const { getApps, initializeApp, cert } = require('firebase-admin/app');
     expect(getApps).toHaveBeenCalled();
@@ -69,11 +66,8 @@ describe('Firebase Admin App', () => {
         cert: jest.fn().mockReturnValue({}),
       };
     });
-
-    // Import module under test
     const { adminApp } = require('./admin-app');
 
-    // Get reference to the mocks for assertions
     const { getApps, initializeApp } = require('firebase-admin/app');
 
     expect(getApps).toHaveBeenCalled();
@@ -97,11 +91,8 @@ describe('Firebase Admin App', () => {
         getAuth: jest.fn().mockReturnValue(mockAuth),
       };
     });
-
-    // Import module under test
     const { adminAuth } = require('./admin-app');
 
-    // Get the updated mock for assertions
     const { getAuth } = require('firebase-admin/auth');
 
     expect(getAuth).toHaveBeenCalled();
@@ -124,7 +115,6 @@ describe('Firebase Admin App', () => {
         getFirestore: jest.fn().mockReturnValue(mockFirestore),
       };
     });
-
     const { adminDb } = require('./admin-app');
 
     const { getFirestore } = require('firebase-admin/firestore');
@@ -137,8 +127,6 @@ describe('Firebase Admin App', () => {
 
   it('should handle undefined private key gracefully', async () => {
     delete process.env.FIREBASE_ADMIN_PRIVATE_KEY;
-
-    // Set up mocks for this test
     const mockApp = { name: 'mock-app' };
     jest.doMock('firebase-admin/app', () => {
       return {
@@ -147,11 +135,8 @@ describe('Firebase Admin App', () => {
         cert: jest.fn(),
       };
     });
-
-    // Import module under test
     const { adminApp } = require('./admin-app');
 
-    // Get reference to the mocks for assertions
     const { cert } = require('firebase-admin/app');
 
     expect(cert).toHaveBeenCalledWith({

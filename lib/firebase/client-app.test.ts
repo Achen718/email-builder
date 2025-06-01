@@ -11,7 +11,6 @@ interface MockAuth extends Auth {
   name: string;
 }
 
-// Mock Firebase modules
 jest.mock('firebase/app', () => ({
   initializeApp: jest.fn(() => ({} as MockFirebaseApp)),
 }));
@@ -38,14 +37,12 @@ describe('Firebase Client App', () => {
     mockApp = { name: 'test-app' } as MockFirebaseApp;
     mockAuth = { name: 'mock-auth' } as MockAuth;
 
-    // configure mock return values
     const { initializeApp } = require('firebase/app');
     const { getAuth } = require('firebase/auth');
 
     (initializeApp as jest.Mock).mockReturnValue(mockApp);
     (getAuth as jest.Mock).mockReturnValue(mockAuth);
 
-    // Set environment variables
     process.env = {
       ...originalEnv,
       NEXT_PUBLIC_FIREBASE_API_KEY: 'test-api-key',

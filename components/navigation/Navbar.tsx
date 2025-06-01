@@ -1,7 +1,6 @@
 'use client';
 import Navbar from './Navbar/index';
 
-// Navigation data
 export const navItems = [
   { label: 'Products', href: '/products' },
   { label: 'Pricing', href: '/pricing' },
@@ -12,7 +11,6 @@ export const navItems = [
 const NavbarComponent = () => {
   return (
     <Navbar.Root>
-      {/* Desktop layout */}
       <div
         style={{
           display: 'flex',
@@ -24,10 +22,9 @@ const NavbarComponent = () => {
         <Navbar.Logo />
         <Navbar.Desktop navItems={navItems} />
         <Navbar.MobileToggle />
-        <Navbar.Actions />
+        <Navbar.Actions />{' '}
       </div>
 
-      {/* Mobile menu - automatically shows/hides based on context */}
       <Navbar.Mobile navItems={navItems} />
     </Navbar.Root>
   );

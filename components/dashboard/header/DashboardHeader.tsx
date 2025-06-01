@@ -14,18 +14,19 @@ import {
   Stack,
   useColorMode,
   Center,
+  Spinner,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import Sidebar from '../side-bar/Sidebar';
 
 const DashboardHeader = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, authLoading: isLoading } = useAuth();
 
   const handleLogout = async () => {
     await logout();
-    // Will redirect automatically through your auth setup
   };
+
   return (
     <>
       <Box bg={useColorModeValue('white', 'gray.900')} px={4}>
@@ -44,18 +45,28 @@ const DashboardHeader = () => {
                   cursor={'pointer'}
                   minW={0}
                 >
-                  <Avatar
-                    size={'sm'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
-                  />
+                  {isLoading ? (
+                    <Spinner size='sm' />
+                  ) : (
+                    <Avatar
+                      name={currentUser?.displayName}
+                      size={'sm'}
+                      src={currentUser?.photoURL}
+                    />
+                  )}
                 </MenuButton>
                 <MenuList alignItems={'center'}>
                   <br />
                   <Center>
-                    <Avatar
-                      size={'2xl'}
-                      src={'https://avatars.dicebear.com/api/male/username.svg'}
-                    />
+                    {isLoading ? (
+                      <Spinner size='sm' />
+                    ) : (
+                      <Avatar
+                        name={currentUser?.displayName}
+                        size={'md'}
+                        src={currentUser?.photoURL}
+                      />
+                    )}
                   </Center>
                   <br />
                   <Center>

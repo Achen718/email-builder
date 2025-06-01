@@ -17,7 +17,6 @@ export async function verifyUserSession(sessionCookie: string | undefined) {
     );
     const uid = decodedClaims.uid;
 
-    // Get user data from Firestore
     const userDoc = await adminDb.collection('users').doc(uid).get();
 
     if (!userDoc.exists) {
@@ -49,10 +48,9 @@ export async function verifyUserSession(sessionCookie: string | undefined) {
  */
 export async function createUserSession(idToken: string) {
   try {
-    // Verify the ID token
+    // Verify the ID token    const decodedToken = await verifyIdToken(idToken);
     const decodedToken = await verifyIdToken(idToken);
 
-    // Create session cookie
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn,

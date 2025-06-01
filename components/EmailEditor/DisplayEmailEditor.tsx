@@ -90,10 +90,8 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
         throw new Error('User not authenticated');
       }
 
-      // Get image dimensions
       const dimensions = await getImageDimensions(file);
 
-      // Upload to S3
       const uploadedImage = await uploadImageToS3(file, currentUser.uid, {
         width: dimensions.width,
         height: dimensions.height,
@@ -101,7 +99,6 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
         fileName: file.name,
       });
 
-      // Return data in format expected by Unlayer editor
       onSuccess({
         url: uploadedImage.url,
         width: uploadedImage.width ?? dimensions.width,
@@ -109,7 +106,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
       });
     } catch (error) {
       console.error('Failed to upload image:', error);
-      // Handle error
+      // Add better error handler (e.g., show a message to the user)
     }
   };
 
@@ -129,7 +126,6 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
     });
   };
 
-  // commit templates in redux
   const exportHtml = () => {
     const unlayer = emailEditorRef.current?.editor;
 
@@ -149,7 +145,6 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
           throw new Error('User not authenticated');
         }
 
-        // Use your existing function
         await saveTemplateDesign(currentUser.uid, templateId, design);
         console.log('Template saved to Firestore');
       } catch (error) {
@@ -159,7 +154,6 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
   };
 
   const onUpdateAutoSave = () => {
-    // Design has been updated by the user
     console.log('trigger auto save');
     // saveDesign();
   };
@@ -176,11 +170,9 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
 
     const { type, item, changes } = data;
     console.log('design:updated', type, item, changes);
-    // Debounce the onUpdateAutoSave function to limit the number of call
 
     debouncedAutoSave(changes);
 
-    // undo/redo state
     unlayer?.canUndo((result) => {
       result ? setCanUndo(result) : setCanUndo(false);
     });
@@ -213,7 +205,7 @@ const DisplayEmailEditor = ({ templateId }: DisplayEmailEditorProps) => {
       }
 
       setIsLoading(true);
-      // Use your existing function with correct parameter order
+
       const template = await getTemplateById(templateId, currentUser.uid);
 
       if (template && template.design && isEmailDesign(template.design)) {

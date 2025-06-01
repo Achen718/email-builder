@@ -23,7 +23,6 @@ const mockTemplates: Template[] = [
     updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
   },
-  // Add more mock templates as needed
 ];
 
 export const fetchMockTemplates = (): Promise<Template[]> => {
@@ -37,7 +36,6 @@ export const fetchMockTemplates = (): Promise<Template[]> => {
 export const fetchMockDesignsList = async (): Promise<Design[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      // Create mock designs based on templates
       const mockDesigns = mockTemplates.map((template) => ({
         id: `design_${template.id}`,
         name: `Design from ${template.name}`,

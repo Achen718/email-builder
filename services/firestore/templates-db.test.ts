@@ -19,11 +19,9 @@ import {
 import { EmailDesign } from '@/types/templates';
 
 jest.mock('@/utils/validateEmailDesign', () => ({
-  // always return true for tests
   isEmailDesign: jest.fn().mockReturnValue(true),
 }));
 
-// Mock Firebase modules
 jest.mock('@/lib/firebase/client-app', () => ({
   db: {},
 }));
@@ -133,7 +131,6 @@ describe('Template Database Operations', () => {
       templateId
     );
     expect(updateDoc).toHaveBeenCalled();
-    // Check what updateDoc was called with
     expect(updateDoc).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({

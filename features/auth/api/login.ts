@@ -25,11 +25,9 @@ export async function authenticateUser(email: string, password: string) {
     throw new Error(data.error?.message || 'Authentication failed');
   }
 
-  // Get the ID token and user data
   const idToken = data.idToken;
   const uid = data.localId;
 
-  // Create a session cookie
   const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
   const sessionCookie = await adminAuth.createSessionCookie(idToken, {
     expiresIn,

@@ -15,15 +15,12 @@ interface AuthResult {
   userToken: string;
 }
 
-// Process user authentication and document creation
 export const processUserAuthentication = async (
   user: User
 ): Promise<AuthResult> => {
   try {
-    // Get ID token for API route authentication
     const idToken = await user.getIdToken();
 
-    // Call API route to create/verify user document with Admin SDK
     const response = await fetch('/api/users/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,7 +33,6 @@ export const processUserAuthentication = async (
       throw new Error(data.error || 'Failed to create user document');
     }
 
-    // Return user data and token for Redux store
     return {
       user: {
         email: user.email,

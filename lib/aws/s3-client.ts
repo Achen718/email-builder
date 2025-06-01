@@ -1,7 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { AWS_REGION, getAwsCredentials } from './client';
 
-// Load environment variables or terraform outputs for S3 config
 const S3_BUCKET_NAME =
   process.env.NEXT_PUBLIC_S3_BUCKET_NAME || 'email-builder-email-assets';
 const S3_BUCKET_DOMAIN =
@@ -11,7 +10,6 @@ const S3_BUCKET_DOMAIN =
 // CloudFront domain for serving assets
 const CLOUDFRONT_DOMAIN = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN || '';
 
-// Create S3 client
 const s3Client = new S3Client({
   region: AWS_REGION,
   credentials: getAwsCredentials(),

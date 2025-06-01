@@ -3,12 +3,10 @@ export function sanitizeDataForFirestore<T>(obj: T): T {
     return obj;
   }
 
-  // Handle arrays
   if (Array.isArray(obj)) {
     return obj.map((item) => sanitizeDataForFirestore(item)) as unknown as T;
   }
 
-  // Handle objects
   const result = {} as T;
   for (const [key, value] of Object.entries(obj)) {
     if (value !== undefined) {

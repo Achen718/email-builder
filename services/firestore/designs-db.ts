@@ -31,7 +31,6 @@ export const createDesign = async (
   return newDesignRef.id;
 };
 
-// Save or update a design
 export const saveDesignContent = async (
   designId: string,
   design: EmailDesign,
@@ -49,7 +48,6 @@ export const saveDesignContent = async (
   });
 };
 
-// Get all designs for a user
 export const getUserDesigns = async (userId: string): Promise<Design[]> => {
   const designsQuery = query(
     collection(db, 'designs'),
@@ -60,7 +58,6 @@ export const getUserDesigns = async (userId: string): Promise<Design[]> => {
   return snapshot.docs.map((doc) => ({ ...doc.data() } as Design));
 };
 
-// Get a design by id
 export const getDesignById = async (
   designId: string
 ): Promise<Design | null> => {

@@ -4,7 +4,6 @@ interface TemplateCheckResponse {
   needsTemplateSync: boolean;
 }
 
-// Extend your existing API
 export const templatesApi = firebaseApi.injectEndpoints({
   endpoints: (builder) => ({
     checkTemplates: builder.query<TemplateCheckResponse, void>({

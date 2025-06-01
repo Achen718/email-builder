@@ -28,16 +28,12 @@ export interface DefaultTemplate {
   updatedAt?: string;
 }
 
-// Process template to use CloudFront URLs for all images
 async function processTemplateImages(
   template: EmailDesign
 ): Promise<EmailDesign> {
   const processedTemplate = JSON.parse(JSON.stringify(template));
   const imageMapping = new Map<string, string>();
-
-  // Helper function to process images recursively
   const processNode = async (node: DesignNode): Promise<void> => {
-    // Check for image nodes
     if (node.type === 'image' && node.values?.src?.url) {
       const originalUrl = node.values.src.url;
 
@@ -48,7 +44,6 @@ async function processTemplateImages(
       }
 
       try {
-        // Extract filename from URL
         const urlParts = originalUrl.split('/');
         const filename = urlParts[urlParts.length - 1];
 
@@ -69,27 +64,21 @@ async function processTemplateImages(
             fileName: filename,
           }
         );
-
-        // Get CloudFront URL and update the template
         const cloudFrontUrl = getAssetUrl(s3Key);
         node.values.src.url = cloudFrontUrl;
 
-        // Save mapping for reuse
         imageMapping.set(originalUrl, cloudFrontUrl);
       } catch (error) {
         console.error(`Failed to process image ${node.values.src.url}:`, error);
         // Keep the original URL if processing fails
       }
-    }
-
-    // Process any child elements
+    } // Process any child elements
     if (node.contents) {
       for (const content of node.contents) {
         await processNode(content);
       }
     }
 
-    // Process columns for rows
     if (node.columns) {
       for (const column of node.columns) {
         await processNode(column);
@@ -107,7 +96,6 @@ async function processTemplateImages(
   return processedTemplate;
 }
 
-// Add a new template to the default_templates collection
 export async function addDefaultTemplate(
   template: DefaultTemplate
 ): Promise<string> {
@@ -115,7 +103,6 @@ export async function addDefaultTemplate(
     // Process all images in the template to use CloudFront
     const processedDesign = await processTemplateImages(template.design);
 
-    // Create document in default_templates collection
     const templateRef = adminDb.collection('default_templates').doc();
     await templateRef.set({
       ...template,
@@ -145,7 +132,6 @@ export async function addDefaultTemplatesForUser(
   try {
     console.log(`Adding default templates for user ${userId}...`);
 
-    // Get all default templates using your existing function
     const defaultTemplates = await getDefaultTemplates();
 
     if (defaultTemplates.length === 0) {
@@ -153,11 +139,9 @@ export async function addDefaultTemplatesForUser(
       return;
     }
 
-    // Create a batch write operation for efficiency
     const batch = adminDb.batch();
     let count = 0;
 
-    // Add each template to the user's collection
     for (const template of defaultTemplates) {
       const userTemplateRef = adminDb
         .collection('users')
@@ -199,7 +183,6 @@ export async function getDefaultTemplates(): Promise<DefaultTemplate[]> {
   return snapshot.docs.map((doc) => ({ ...doc.data() } as DefaultTemplate));
 }
 
-// Get a specific default template
 export async function getDefaultTemplateById(
   id: string
 ): Promise<DefaultTemplate | null> {

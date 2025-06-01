@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const handleTemplateSync = async () => {
       if (!authLoading && currentUser) {
         try {
-          // Only triggers API call when executed
           const result = await checkTemplates().unwrap();
 
           if (result?.needsTemplateSync) {
