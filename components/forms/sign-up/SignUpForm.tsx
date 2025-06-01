@@ -1,9 +1,7 @@
 'use client';
-
 import { Box, HStack, Stack, Link, useToast } from '@chakra-ui/react';
 import { useState, ChangeEvent, FormEvent } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import FormInput from '@/components/forms/formInput/FormInput';
 import FormContainer from '@/components/forms/formContainer/FormContainer';
@@ -21,7 +19,6 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
-  const router = useRouter();
   const toast = useToast();
 
   const { signUp, isSignUpLoading } = useAuth();
@@ -103,6 +100,7 @@ const SignUpForm = () => {
         />
         <Stack pt={2}>
           <FormButton
+            data-testid='sign-up-form-button'
             buttonText='Sign up'
             loading={isSignUpLoading}
             type='submit'
